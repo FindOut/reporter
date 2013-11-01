@@ -1,5 +1,3 @@
-console.log("hej!");
-
 angular.module('project', ['firebase']).
     value('fbURL', 'https://reporter.firebaseio.com/').
     factory('Projects', function(angularFireCollection, fbURL) {
@@ -18,15 +16,18 @@ angular.module('project', ['firebase']).
 
 function MainCtrl($scope, $location, context) {
   context.target = getQueryParam('target');
-  console.log("target", context.target);
   $scope.target = context.target;
 }
 
 function ListCtrl($scope, Projects, context, $location) {
+  $scope.formatDate = function(isoString) {
+    var date = new Date(isoString);
+    console.log("date", date);
+    return date.format("yy-mm-dd HH:MM:ss");
+  }
   $scope.context = context;
   $scope.projects = Projects;
   $scope.viewReport = function(id) {
-    console.log("id", "#/edit/" + id);
     window.location.href ="#/edit/" + id;
   }
 }
@@ -34,6 +35,7 @@ function ListCtrl($scope, Projects, context, $location) {
 function CreateCtrl($scope, $location, $timeout, context, Projects) {
   $scope.save = function() {
     $scope.project.target = context.target;
+    $scope.project.createdDate = new Date().toISOString();
     Projects.add($scope.project, function() {
       $timeout(function() { $location.path('/'); });
     });
@@ -44,6 +46,7 @@ function EditCtrl($scope, $location, $routeParams, angularFire, fbURL) {
   angularFire(fbURL + $routeParams.projectId, $scope, 'remote', {}).
       then(function() {
         $scope.project = angular.copy($scope.remote);
+        console.log("createDate", $scope.project.createdDate);
         $scope.project.$id = $routeParams.projectId;
         $scope.isClean = function() {
           return angular.equals($scope.remote, $scope.project);
@@ -66,3 +69,4 @@ function getQueryParam(key){
   }
   return temp[1];
 }
+
