@@ -1,0 +1,49 @@
+span {
+    display: block;
+    overflow: hidden;
+    padding: 0 6px 0 0px
+}
+
+input.search-query {
+    width: 100%;
+    border-radius: 0.3em;
+    margin: 0px;
+    padding: 2px 2px 2px 4px;
+}
+
+textarea {
+    width: 100%;
+}
+
+input.add {
+    margin: 10px 0px 10px 0px;
+}
+
+html, input, textarea, label, button, text {
+    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-size: 1em;
+}
+
+html {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    background-color: #C1E2F0;
+    padding: 0px;
+    margin: 0px;
+}
+
+ul.report-list {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px 0px 0.5em 0px;
+}
+
+ul.report-list li {
+    background-color: #eee;
+    padding: 0.2em;
+    margin: 1px 1px 1px 1px;
+    border-radius: 0.3em;
+}
