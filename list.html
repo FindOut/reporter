@@ -1,5 +1,5 @@
-<span><input type="text" ng-model="search" class="search-query" placeholder="Search">
-<input class="add" type="button" value="Add"     onclick="window.location.href = '#/new';"></span>
+<span><input type="text" ng-model="search" class="search-query" placeholder="Söktext">
+<input class="add" type="button" value="Ny rapport"     onclick="window.location.href = '#/new';"></span>
 
 <ul class="report-list" ng-repeat="project in projects | filter:context.target:strict | filter:search | orderBy:'-createdDate'">
     <li ng-click="viewReport(project.$id)">

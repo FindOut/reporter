@@ -22,9 +22,8 @@ function MainCtrl($scope, $location, context) {
 function ListCtrl($scope, Projects, context, $location) {
   $scope.formatDate = function(isoString) {
     var date = new Date(isoString);
-    console.log("date", date);
     return date.format("yy-mm-dd HH:MM:ss");
-  }
+  };
   $scope.context = context;
   $scope.projects = Projects;
   $scope.viewReport = function(id) {
@@ -50,7 +49,7 @@ function EditCtrl($scope, $location, $routeParams, angularFire, fbURL) {
         $scope.project.$id = $routeParams.projectId;
         $scope.isClean = function() {
           return angular.equals($scope.remote, $scope.project);
-        }
+        };
         $scope.destroy = function() {
           $scope.remote = null;
           $location.path('/');
