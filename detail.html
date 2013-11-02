@@ -11,6 +11,15 @@
               ng-disabled="myForm.type.$invalid" placeholder="Beskrivning"></textarea>
 
     <br>
+    <ul class="attachmentlist" ng-repeat="attachment in project.attachments">
+        <li><img src="camera.png"></li>
+    </ul>
+    <div class="image-upload">
+        <label for="file-upload"><img src="camera-plus.png"/></label>
+        <input id="file-upload" type="file" accept="image/*" capture="camera">
+    </div>
+    <br>
+
     <a href="#/" class="btn">Avbryt</a>
     <button ng-click="save()" ng-disabled="isClean() || myForm.$invalid"
             class="btn btn-primary">Spara</button>
