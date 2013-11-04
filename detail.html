@@ -1,4 +1,5 @@
 <form name="myForm">
+    <label>Changed {{project.changeDate}}</label>
     <div class="control-group" ng-class="{error: myForm.type.$invalid}">
         <select name="type" ng-model="project.type" onchange="$('#description').focus()" required>
             <option value="problem">Felanmälan</option>
@@ -12,7 +13,7 @@
 
     <br>
     <ul class="attachmentlist" ng-repeat="attachment in project.attachments">
-        <li><img src="camera.png"></li>
+        <li ng-click="viewImage(project.$id, $index)"><img src="camera.png"></li>
     </ul>
     <div class="image-upload">
         <label for="file-upload"><img src="camera-plus.png"/></label>

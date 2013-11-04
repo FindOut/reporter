@@ -10,6 +10,7 @@ angular.module('project', ['firebase']).
       $routeProvider.
           when('/', {controller:ListCtrl, templateUrl:'list.html'}).
           when('/edit/:projectId', {controller:EditCtrl, templateUrl:'detail.html'}).
+          when('/image/:projectId/:imageIndex', {controller:ViewImageCtrl, templateUrl:'image.html'}).
           when('/new', {controller:CreateCtrl, templateUrl:'detail.html'}).
           otherwise({redirectTo:'/'});
     });
@@ -32,8 +33,7 @@ function ListCtrl($scope, Projects, context, $location) {
 }
 
 function CreateCtrl($scope, $location, $timeout, context, Projects) {
-  $scope.project.attachments = [];
-  addAttachMentHandler($scope.project);
+  addAttachmentHandler($scope, createProjectInDb);
   $scope.save = function() {
     $scope.project.target = context.target;
     $scope.project.createdDate = new Date().toISOString();
@@ -59,11 +59,22 @@ function EditCtrl($scope, $location, $routeParams, angularFire, fbURL) {
           $scope.remote = angular.copy($scope.project);
           $location.path('/');
         };
-        addAttachMentHandler($scope);
+        addAttachmentHandler($scope);
+        $scope.viewImage = function(id, index) {
+          window.location.href ="#/image/" + id + "/" + index;
+        }
       });
 }
 
-function addAttachMentHandler($scope) {
+function ViewImageCtrl($scope, $location, $routeParams, angularFire, fbURL) {
+  angularFire(fbURL + $routeParams.projectId, $scope, 'remote', {}).
+  then(function() {
+    $scope.project = angular.copy($scope.remote);
+    $scope.imageData = $scope.project.attachments[parseInt($routeParams.imageIndex)];
+  });
+}
+
+function addAttachmentHandler($scope) {
   var handleFileSelect = function(evt) {
     var f = evt.target.files[0];
     var reader = new FileReader();
@@ -88,56 +99,4 @@ function getQueryParam(key){
     return undefined;
   }
   return temp[1];
-}
-
-function hidden() {
-  var spinner = new Spinner({color: '#ddd'});
-
-  function handleFileSelect(evt) {
-    var f = evt.target.files[0];
-    var reader = new FileReader();
-    reader.onload = (function(theFile) {
-      return function(e) {
-        var filePayload = e.target.result;
-        // Generate a location that can't be guessed using the file's contents and a random number
-        var hash = CryptoJS.SHA256(Math.random() + CryptoJS.SHA256(filePayload));
-        var f = new Firebase(firebaseRef + 'pano/' + hash + '/filePayload');
-        spinner.spin(document.getElementById('spin'));
-        // Set the file payload to Firebase and register an onComplete handler to stop the spinner and show the preview
-        f.set(filePayload, function() {
-          spinner.stop();
-          document.getElementById("pano").src = e.target.result;
-          $('#file-upload').hide();
-          // Update the location bar so the URL can be shared with others
-          window.location.hash = hash;
-        });
-      };
-    })(f);
-    reader.readAsDataURL(f);
-  }
-
-  $(function() {
-    $('#spin').append(spinner);
-
-    var idx = window.location.href.indexOf('#');
-    var hash = (idx > 0) ? window.location.href.slice(idx + 1) : '';
-    if (hash === '') {
-      // No hash found, so render the file upload button.
-      $('#file-upload').show();
-      document.getElementById("file-upload").addEventListener('change', handleFileSelect, false);
-    } else {
-      // A hash was passed in, so let's retrieve and render it.
-      spinner.spin(document.getElementById('spin'));
-      var f = new Firebase(firebaseRef + '/pano/' + hash + '/filePayload');
-      f.once('value', function(snap) {
-        var payload = snap.val();
-        if (payload != null) {
-          document.getElementById("pano").src = payload;
-        } else {
-          $('#body').append("Not found");
-        }
-        spinner.stop();
-      });
-    }
-  });
 }
