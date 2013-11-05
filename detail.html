@@ -1,19 +1,18 @@
 <form name="myForm">
-    <label>Changed {{project.changeDate}}</label>
     <div class="control-group" ng-class="{error: myForm.type.$invalid}">
-        <select name="type" ng-model="project.type" onchange="$('#description').focus()" required>
+        <select name="type" ng-model="report.type" onchange="$('#description').focus()" required>
             <option value="problem">Felanmälan</option>
             <option value="suggestion">Förslag</option>
             <option value="success">Framgångssaga</option>
         </select>
     </div>
 
-    <textarea id="description" name="description" ng-model="project.description"
+    <textarea id="description" name="description" ng-model="report.description"
               ng-disabled="myForm.type.$invalid" placeholder="Beskrivning"></textarea>
 
     <br>
-    <ul class="attachmentlist" ng-repeat="attachment in project.attachments">
-        <li ng-click="viewImage(project.$id, $index)"><img src="camera.png"></li>
+    <ul class="attachmentlist" ng-repeat="attachment in report.attachments">
+        <li ng-click="viewImage(report.$id, $index)"><img src="camera.png"></li>
     </ul>
     <div class="image-upload">
         <label for="file-upload"><img src="camera-plus.png"/></label>
@@ -25,5 +24,5 @@
     <button ng-click="save()" ng-disabled="isClean() || myForm.$invalid"
             class="btn btn-primary">Spara</button>
     <button ng-click="destroy()"
-            ng-show="project.$id" class="btn btn-danger">Ta bort</button>
+            ng-show="report.$id" class="btn btn-danger">Ta bort</button>
 </form>
