@@ -2,7 +2,7 @@
 <input class="add" type="button" value="Ny rapport" onclick="window.location.href = '#/new';"></span>
 
 <ul class="report-list" ng-repeat="report in reports | filter:context.target:strict | filter:search | orderBy:'-createdDate'">
-    <li ng-click="viewReport(report.$id)">
-        {{formatDate(report.createdDate)}}<br/>{{report.description}}
+    <li ng-click="viewReport(report.id)">
+        {{formatDate(report.changedDate)}}<br/>{{report.description}}
     </li>
 </ul>
