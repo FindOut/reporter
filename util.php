@@ -1,5 +1,5 @@
 <?php
-$dir = '/home/fo/projects/downloadticket/files';
+$uploaddir = '/home/dag/public_html/reporter-test/uploads';
 
 function dbconnect() {
 	$user="reporter";
@@ -18,6 +18,10 @@ function startsWith($s, $start) {
 		return true;
 	}
 	return false;
+}
+
+function xxxlog($s) {
+    file_put_contents('/home/dag/public_html/reporter-test/uploads/upload-log.txt', $s."\n", FILE_APPEND);
 }
 
 ?>

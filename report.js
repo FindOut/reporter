@@ -74,12 +74,12 @@ function ViewImageCtrl($scope, $location, $routeParams, repo) {
 function addAttachmentHandler($scope, repo) {
   var handleFileSelect = function(evt) {
     var f = evt.target.files[0];
-    repo.uploadFile(f, function(fileId) {
-        console.log("fileId", fileId);
+    repo.uploadFile(f, function(result) {
+        console.log("fileId", result.fileId);
         if ($scope.report.attachments == undefined)   {
           $scope.report.attachments = [];
         }
-        $scope.report.attachments.push(fileId);
+        $scope.report.attachments.push(result.fileId);
         $scope.$apply();
     });
   }

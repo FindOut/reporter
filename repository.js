@@ -21,15 +21,6 @@ service('repo', function($location) {
 
     return {
         // uploads file f and when done, calls onReady with the created id for it
-        xuploadFile: function(f, onReady) {
-            console.log("uploadFile", f);
-            var newId = fileId++;
-            if (onReady != undefined) {
-                console.log("uploadFile.onReady", newId);
-                onReady(newId);
-            }
-        },
-
         uploadFile: function(file, onReady) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "upload.php", true);
@@ -37,7 +28,7 @@ service('repo', function($location) {
                     console.log("xhr.readyState",xhr.readyState,"xhr.status",xhr.status); // handle response.
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     if (onReady != undefined) {
-                        onReady(this.responseText);
+                        onReady(eval(this.responseText));
                     }
                 }
             };
@@ -46,31 +37,6 @@ service('repo', function($location) {
             fd.append('afile', file);
             xhr.send(fd);
 
-        },
-
-        yuploadFile: function(file, onReady) {
-            var reader = new FileReader();
-            var xhr = new XMLHttpRequest();
-            this.xhr = xhr;
-
-            var self = this;
-
-            xhr.onload = function() {
-                if (onReady != undefined) {
-                    onReady(this.responseText);
-                }
-            };
-            xhr.upload.addEventListener("load", function(e){
-                console.log("upload ready");
-            }, false);
-            xhr.open("POST", "upload.php");
-            xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
-            reader.onload = function(evt) {
-                console.log("will send");
-                xhr.send(evt.target.result);
-                console.log("sent");
-            };
-            reader.readAsBinaryString(file);
         },
 
         // returns the URL to get the file with the supplied fileId
