@@ -75,6 +75,7 @@ function addAttachmentHandler($scope, repo) {
   var handleFileSelect = function(evt) {
     var f = evt.target.files[0];
     repo.uploadFile(f, function(fileId) {
+        console.log("fileId", fileId);
         if ($scope.report.attachments == undefined)   {
           $scope.report.attachments = [];
         }
