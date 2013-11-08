@@ -3,7 +3,7 @@ $uploaddir = '/home/dag/public_html/reporter-test/uploads';
 
 function dbconnect() {
 	$user="reporter";
-	$password="gleFFer";
+	$password="";
 	$database="reporter";
 	mysql_connect('localhost',$user,$password);
 	@mysql_select_db($database) or die( "Unable to select database ".$database);
@@ -20,8 +20,9 @@ function startsWith($s, $start) {
 	return false;
 }
 
-function xxxlog($s) {
-    file_put_contents('/home/dag/public_html/reporter-test/uploads/upload-log.txt', $s."\n", FILE_APPEND);
+function attachmentIdString($attachment) {
+    $id = $attachment['id'];
+    return("$id");
 }
 
 ?>

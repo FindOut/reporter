@@ -4,7 +4,7 @@ include('util.php');
     createdDate date not null, changedDate date not null,PRIMARY KEY (id),UNIQUE id (id))
 */
 dbconnect();
-$q = "select id, type, description, createdDate, changedDate from report order by changedDate desc";
+$q = "select id, target, type, description, createdDate, changedDate from report where target='".$_REQUEST['target']."' order by changedDate desc";
 $reports = mysql_query($q);
 if (mysql_errno()!=0) {
     die(mysql_error().' ('.mysql_errno().')');

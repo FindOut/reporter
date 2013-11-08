@@ -9,33 +9,38 @@
 
 	dbconnect();
 
-	$uploadedFile = $_FILES['afile']['name'];
-#	$target_path = $uploaddir. "/" . basename( $uploadedFile);
-    $tmp_name = $_FILES['afile']['tmp_name'];
+    $file_tmp_name = $_FILES['afile']['tmp_name'];
+    $file_name = $_FILES['afile']['name'];
+    $file_type = $_FILES['afile']['type'];
+    $file_size = $_FILES['afile']['size'];
+    $file_error = $_FILES['afile']['error'];
 
-#	header("Content-Type: text/plain");
-#	echo "_FILES['afile']['name']=".$_FILES['afile']['name']."\n";
-#	echo "_FILES['afile']['type']=".$_FILES['afile']['type']."\n";
-#	echo "_FILES['afile']['size']=".$_FILES['afile']['size']."\n";
-#	echo "_FILES['afile']['tmp_name']=".$_FILES['afile']['tmp_name']."\n";
-#	echo "_FILES['afile']['error']=".$_FILES['afile']['error']."\n";
+    error_log("file_name=$file_name");
+    error_log("file_type=$file_type");
+    error_log("file_size=$file_size");
+    error_log("file_tmp_name=$file_tmp_name");
+    error_log("file_error=$file_error");
 
     $result = array();
-    $result['error'] = 0;
+    $result['error'] = $file_error;
     $result['errorText'] = '';
 
-    $insertstmt = "insert into attachment (name, mimetype) values ('".$_FILES['afile']['name']."', '".$_FILES['afile']['type']."')";
-    mysql_query($insertstmt);
-    $id = mysql_insert_id();
-    $result['fileId'] = $id;
-    if (mysql_error()) {
-        $result['error'] = mysql_error();
-    } else {
-        $target_path = $uploaddir."/".$id;
-    	if (move_uploaded_file($_FILES['afile']['tmp_name'], $target_path)) {
-        } else{
-            $result['error'] = -1;
-            $result['errorText'] = "could not store uploaded file ".$tmp_name." in target path ".$target_path;
+    if ($file_error == 0) {
+        $insertstmt = "insert into attachment (name, mimetype) values ('$file_name', '$file_type')";
+        error_log($insertstmt);
+        mysql_query($insertstmt);
+        $id = mysql_insert_id();
+        $result['fileId'] = $id;
+        if (mysql_error()) {
+            $result['error'] = mysql_errno();
+            $result['errorText'] = mysql_error();
+        } else {
+            $target_path = "$uploaddir/$id";
+            if (move_uploaded_file($file_tmp_name, $target_path)) {
+            } else{
+                $result['error'] = -1;
+                $result['errorText'] = "could not store uploaded file $file_tmp_name in target path $target_path";
+            }
         }
     }
     echo json_encode($result);

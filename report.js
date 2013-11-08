@@ -6,7 +6,7 @@ config(function($routeProvider) {
   $routeProvider.
       when('/', {controller:ListCtrl, templateUrl:'list.html'}).
       when('/edit/:reportId', {controller:EditCtrl, templateUrl:'detail.html'}).
-      when('/image/:reportId/:imageIndex', {controller:ViewImageCtrl, templateUrl:'image.html'}).
+      when('/image/:attachmentId', {controller:ViewImageCtrl, templateUrl:'image.html'}).
       when('/new', {controller:CreateCtrl, templateUrl:'detail.html'}).
       otherwise({redirectTo:'/'});
 });
@@ -22,7 +22,7 @@ function ListCtrl($scope, repo, context, $location) {
     return date.format("yy-mm-dd HH:MM:ss");
   };
   $scope.context = context;
-  repo.listReports(function(list) {
+  repo.listReports(context.target, function(list) {
       $scope.reports = list;
       $scope.$apply();
   });
@@ -57,18 +57,16 @@ function EditCtrl($scope, $location, $routeParams, repo) {
       $location.path('/');
     };
     addAttachmentHandler($scope, repo);
-    $scope.viewImage = function(id, index) {
-      window.location.href ="#/image/" + id + "/" + index;
+    $scope.viewImage = function(id) {
+      console.log("viewImage", id);
+      window.location.href ="#/image/" + id;
     }
       $scope.$apply();
   });
 }
 
 function ViewImageCtrl($scope, $location, $routeParams, repo) {
-  repo.getReport($routeParams.reportId, function(report) {
-    $scope.report = report;
-    $scope.imageUrl = repo.getFileUrl(0); //repo.getFileUrl($scope.report.attachments[parseInt($routeParams.imageIndex)]);
-  });
+  $scope.imageurl = repo.getFileUrl($routeParams.attachmentId);
 }
 
 function addAttachmentHandler($scope, repo) {
@@ -79,7 +77,7 @@ function addAttachmentHandler($scope, repo) {
         if ($scope.report.attachments == undefined)   {
           $scope.report.attachments = [];
         }
-        $scope.report.attachments.push(result.fileId);
+        $scope.report.attachments.push({id:result.fileId, mimetype: f.type});
         $scope.$apply();
     });
   }

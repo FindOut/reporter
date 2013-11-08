@@ -12,7 +12,7 @@
 
     <br>
     <ul class="attachmentlist" ng-repeat="attachment in report.attachments">
-        <li ng-click="viewImage(report.$id, $index)"><img src="camera.png"></li>
+        <li ng-click="viewImage(attachment.id)"><img src="camera.png"></li>
     </ul>
     <div class="image-upload">
         <label for="file-upload"><img src="camera-plus.png"/></label>

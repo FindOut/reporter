@@ -3,22 +3,6 @@
  */
 angular.module('repository', []).
 service('repo', function($location) {
-    var fileId = 0;
-    var list = [
-        {id: 1, type:'problem', description: "ett", createdDate: '2013-11-01T16:15:16.525Z'},
-        {id: 2, type:'problem', description: "två", createdDate: '2013-11-01T17:42:04.786Z'},
-        {id: 3, type:'problem', description: "tre", createdDate: '2013-11-04T07:55:34.765Z'}
-    ];
-    var findIndexById = function(id) {
-        for(i in list) {
-            var r = list[i];
-            if (id == r.$id) {
-                return i;
-            }
-        }
-        return undefined;
-    };
-
     return {
         // uploads file f and when done, calls onReady with the created id for it
         uploadFile: function(file, onReady) {
@@ -28,10 +12,11 @@ service('repo', function($location) {
                     console.log("xhr.readyState",xhr.readyState,"xhr.status",xhr.status); // handle response.
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     if (onReady != undefined) {
-                        onReady(eval(this.responseText));
+                        onReady(eval("["+this.responseText+"]")[0]);
                     }
                 }
             };
+            console.log("file.type=" + file.type);
             var fd = new FormData();
             fd.append('hej', 'du glade');
             fd.append('afile', file);
@@ -40,21 +25,18 @@ service('repo', function($location) {
         },
 
         // returns the URL to get the file with the supplied fileId
-        getFileUrl: function(fileId) {
-            console.log("getFileUrl(" + fileId + ")")
-            var fileUrl = "getFile.php?fileId=" + fileId;
-            console.log("getFileUrl(" + fileId + ")=", fileUrl);
-            return  fileUrl;
+        getFileUrl: function(attachmentId) {
+            return  "getfile.php?id=" + attachmentId;
         },
 
-        listReports: function(onReady) {
+        listReports: function(target, onReady) {
             var oReq = new XMLHttpRequest();
             oReq.onload = function() {
                 if (onReady != undefined) {
                     onReady(eval(this.responseText));
                 }
             };
-            oReq.open("get", "listreports.php", true);
+            oReq.open("get", "listreports.php?target=" + target, true);
             oReq.send();
         },
 
