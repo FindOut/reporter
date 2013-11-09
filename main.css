@@ -1,3 +1,8 @@
+img.fitpage {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 span {
     display: block;
     overflow: hidden;
@@ -19,7 +24,7 @@ input.add {
     margin: 10px 0 10px 0;
 }
 
-html, input, textarea, label, button, text {
+html, input, textarea, label, button {
     font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     font-size: 1em;
 }
