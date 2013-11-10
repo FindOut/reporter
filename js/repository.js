@@ -7,7 +7,7 @@ service('repo', function($location) {
         // uploads file f and when done, calls onReady with the created id for it
         uploadFile: function(file, onReady) {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "upload.php", true);
+            xhr.open("POST", "ws/upload.php", true);
             xhr.onreadystatechange = function() {
                     console.log("xhr.readyState",xhr.readyState,"xhr.status",xhr.status); // handle response.
                 if (xhr.readyState == 4 && xhr.status == 200) {
@@ -26,7 +26,7 @@ service('repo', function($location) {
 
         // returns the URL to get the file with the supplied fileId
         getFileUrl: function(attachmentId) {
-            return  "getfile.php?id=" + attachmentId;
+            return  "ws/getfile.php?id=" + attachmentId;
         },
 
         listReports: function(target, onReady) {
@@ -36,7 +36,7 @@ service('repo', function($location) {
                     onReady(eval(this.responseText));
                 }
             };
-            oReq.open("get", "listreports.php?target=" + target, true);
+            oReq.open("get", "ws/listreports.php?target=" + target, true);
             oReq.send();
         },
 
@@ -47,7 +47,7 @@ service('repo', function($location) {
                     onReady(eval('['+this.responseText+']')[0]);
                 }
             };
-            oReq.open("get", "getreport.php?id=" + id, true);
+            oReq.open("get", "ws/getreport.php?id=" + id, true);
             oReq.send();
         },
 
@@ -58,7 +58,7 @@ service('repo', function($location) {
                     onReady(eval('['+this.responseText+']')[0]);
                 }
             };
-            oReq.open("get", "deletereport.php?id=" + id, true);
+            oReq.open("get", "ws/deletereport.php?id=" + id, true);
             oReq.send();
         },
 
@@ -70,7 +70,7 @@ service('repo', function($location) {
                     onReady(this.responseText);
                 }
             };
-            oReq.open("get", "addreport.php?report=" + encodeURIComponent(JSON.stringify(report)), true);
+            oReq.open("get", "ws/addreport.php?report=" + encodeURIComponent(JSON.stringify(report)), true);
             oReq.send();
         },
 
@@ -82,7 +82,7 @@ service('repo', function($location) {
                     onReady(this.responseText);
                 }
             };
-            oReq.open("get", "savereport.php?report=" + encodeURIComponent(JSON.stringify(report)), true);
+            oReq.open("get", "ws/savereport.php?report=" + encodeURIComponent(JSON.stringify(report)), true);
             oReq.send();
        }
     };
