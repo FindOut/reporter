@@ -27,6 +27,7 @@ function ListCtrl($scope, repo, context, $location) {
       $scope.$apply();
   });
   $scope.viewReport = function(id) {
+      console.log("viewReport(" + id + ")")
     window.location.href ="#/edit/" + id;
   }
 }
@@ -43,6 +44,7 @@ function CreateCtrl($scope, $location, $timeout, context, repo) {
 }
 
 function EditCtrl($scope, $location, $routeParams, repo) {
+    console.log("EditCtrl $routeParams.reportId=" + $routeParams.reportId)
   repo.getReport($routeParams.reportId, function(report) {
     $scope.report = angular.copy(report);
     $scope.isClean = function() {
@@ -72,12 +74,11 @@ function ViewImageCtrl($scope, $location, $routeParams, repo) {
 function addAttachmentHandler($scope, repo) {
   var handleFileSelect = function(evt) {
     var f = evt.target.files[0];
-    repo.uploadFile(f, function(result) {
-        console.log("fileId", result.fileId);
+    repo.uploadFile(f, function(attachment_id) {
         if ($scope.report.attachments == undefined)   {
           $scope.report.attachments = [];
         }
-        $scope.report.attachments.push({id:result.fileId, mimetype: f.type});
+        $scope.report.attachments.push({id:attachment_id, mimetype: f.type});
         $scope.$apply();
     });
   }

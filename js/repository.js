@@ -4,31 +4,6 @@
 angular.module('repository', []).
 service('repo', function($location) {
     return {
-        // uploads file f and when done, calls onReady with the created id for it
-        uploadFile: function(file, onReady) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "ws/upload.php", true);
-            xhr.onreadystatechange = function() {
-                    console.log("xhr.readyState",xhr.readyState,"xhr.status",xhr.status); // handle response.
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    if (onReady != undefined) {
-                        onReady(eval("["+this.responseText+"]")[0]);
-                    }
-                }
-            };
-            console.log("file.type=" + file.type);
-            var fd = new FormData();
-            fd.append('hej', 'du glade');
-            fd.append('afile', file);
-            xhr.send(fd);
-
-        },
-
-        // returns the URL to get the file with the supplied fileId
-        getFileUrl: function(attachmentId) {
-            return  "ws/getfile.php?id=" + attachmentId;
-        },
-
         listReports: function(target, onReady) {
             var oReq = new XMLHttpRequest();
             oReq.onload = function() {
@@ -36,7 +11,7 @@ service('repo', function($location) {
                     onReady(eval(this.responseText));
                 }
             };
-            oReq.open("get", "ws/listreports.php?target=" + target, true);
+            oReq.open("get", "ws/targets/" + target + "/reports", true);
             oReq.send();
         },
 
@@ -44,21 +19,12 @@ service('repo', function($location) {
             var oReq = new XMLHttpRequest();
             oReq.onload = function() {
                 if (onReady != undefined) {
-                    onReady(eval('['+this.responseText+']')[0]);
+                    console.log("getReport response " + this.responseText)
+                    onReady(eval(this.responseText)[0]);
                 }
             };
-            oReq.open("get", "ws/getreport.php?id=" + id, true);
-            oReq.send();
-        },
-
-        deleteReport: function(id, onReady) {
-            var oReq = new XMLHttpRequest();
-            oReq.onload = function() {
-                if (onReady != undefined) {
-                    onReady(eval('['+this.responseText+']')[0]);
-                }
-            };
-            oReq.open("get", "ws/deletereport.php?id=" + id, true);
+            console.log("ws/reports/" + id);
+            oReq.open("get", "ws/reports/" + id, true);
             oReq.send();
         },
 
@@ -70,8 +36,9 @@ service('repo', function($location) {
                     onReady(this.responseText);
                 }
             };
-            oReq.open("get", "ws/addreport.php?report=" + encodeURIComponent(JSON.stringify(report)), true);
-            oReq.send();
+            oReq.open("post", "ws/reports", true);
+            oReq.setRequestHeader('Content-Type', 'application/json');
+            oReq.send(JSON.stringify(report));
         },
 
         saveReport: function(report, onReady) {
@@ -82,8 +49,45 @@ service('repo', function($location) {
                     onReady(this.responseText);
                 }
             };
-            oReq.open("get", "ws/savereport.php?report=" + encodeURIComponent(JSON.stringify(report)), true);
+            oReq.open("put", "ws/reports/" + report.id, true);
+            oReq.setRequestHeader('Content-Type', 'application/json');
+            oReq.send(JSON.stringify(report));
+        },
+
+        deleteReport: function(id, onReady) {
+            var oReq = new XMLHttpRequest();
+            oReq.onload = function() {
+                if (onReady != undefined) {
+                    onReady(eval('['+this.responseText+']')[0]);
+                }
+            };
+            oReq.open("delete", "ws/reports/" + id, true);
             oReq.send();
-       }
+        },
+
+        // uploads file f and when done, calls onReady with the created id for it
+        uploadFile: function(file, onReady) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "ws/attachments", true);
+            xhr.onreadystatechange = function() {
+                    console.log("xhr.readyState",xhr.readyState,"xhr.status",xhr.status); // handle response.
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (onReady != undefined) {
+                        console.log("new atachment_id=", this.responseText)
+                        onReady(this.responseText);
+                    }
+                }
+            };
+            console.log("file.type=" + file.type);
+            var fd = new FormData();
+            fd.append('afile', file);
+            xhr.send(fd);
+
+        },
+
+        // returns the URL to get the file with the supplied fileId
+        getFileUrl: function(attachmentId) {
+            return  'ws/attachments/' + attachmentId + '/raw';
+        }
     };
 });
