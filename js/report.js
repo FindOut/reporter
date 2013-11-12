@@ -17,6 +17,7 @@ function MainCtrl($scope, $location, context) {
 }
 
 function ListCtrl($scope, repo, context, $location) {
+  $scope.loading = true;
   $scope.formatDate = function(isoString) {
     var date = new Date(isoString);
     return date.format("yy-mm-dd HH:MM:ss");
@@ -24,10 +25,10 @@ function ListCtrl($scope, repo, context, $location) {
   $scope.context = context;
   repo.listReports(context.target, function(list) {
       $scope.reports = list;
+      $scope.loading = false;
       $scope.$apply();
   });
   $scope.viewReport = function(id) {
-      console.log("viewReport(" + id + ")")
     window.location.href ="#/edit/" + id;
   }
 }
@@ -44,7 +45,6 @@ function CreateCtrl($scope, $location, $timeout, context, repo) {
 }
 
 function EditCtrl($scope, $location, $routeParams, repo) {
-    console.log("EditCtrl $routeParams.reportId=" + $routeParams.reportId)
   repo.getReport($routeParams.reportId, function(report) {
     $scope.report = angular.copy(report);
     $scope.isClean = function() {
@@ -60,7 +60,6 @@ function EditCtrl($scope, $location, $routeParams, repo) {
     };
     addAttachmentHandler($scope, repo);
     $scope.viewImage = function(id) {
-      console.log("viewImage", id);
       window.location.href ="#/image/" + id;
     }
       $scope.$apply();

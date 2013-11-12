@@ -19,17 +19,14 @@ service('repo', function($location) {
             var oReq = new XMLHttpRequest();
             oReq.onload = function() {
                 if (onReady != undefined) {
-                    console.log("getReport response " + this.responseText)
                     onReady(eval(this.responseText)[0]);
                 }
             };
-            console.log("ws/reports/" + id);
             oReq.open("get", "ws/reports/" + id, true);
             oReq.send();
         },
 
         addReport: function(report, onReady) {
-            console.log("report=", JSON.stringify(report))
             var oReq = new XMLHttpRequest();
             oReq.onload = function() {
                 if (onReady != undefined) {
@@ -42,7 +39,6 @@ service('repo', function($location) {
         },
 
         saveReport: function(report, onReady) {
-            console.log("report=", JSON.stringify(report))
             var oReq = new XMLHttpRequest();
             oReq.onload = function() {
                 if (onReady != undefined) {
@@ -70,15 +66,12 @@ service('repo', function($location) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "ws/attachments", true);
             xhr.onreadystatechange = function() {
-                    console.log("xhr.readyState",xhr.readyState,"xhr.status",xhr.status); // handle response.
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     if (onReady != undefined) {
-                        console.log("new atachment_id=", this.responseText)
                         onReady(this.responseText);
                     }
                 }
             };
-            console.log("file.type=" + file.type);
             var fd = new FormData();
             fd.append('afile', file);
             xhr.send(fd);

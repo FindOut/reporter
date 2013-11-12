@@ -1,6 +1,7 @@
 <!doctype html>
 <html ng-app="report">
     <head>
+        <title>Reporter</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="vendor/jquery-1.9.1.js"></script>
@@ -11,7 +12,7 @@
         <script src="js/report.js"></script>
         <link href="css/main.css" rel="stylesheet"/></head>
     <body ng-controller="MainCtrl">
-        <h2>{{target}}</h2>
+        <h2 class="target-title">{{target}}</h2>
         <div ng-view></div>
     </body>
 </html>
