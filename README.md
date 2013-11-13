@@ -2,7 +2,7 @@
 
 Web-app för att registrera felraporter, förslag mm.
 
-* öppna med en target - http://host/reporter/?target=thetarget
+* öppna med http://host/reporter/?target=thetarget där thetarget är den maskin etc som felrapporten gäller
 * se alla rapporter för denna target eller skapa ny rapport
 * en rapport innehåller
     * typ
@@ -49,6 +49,23 @@ REST-tjänst och web-app-fier servas av en node.js-server.
 
 Uppladdade bilagor lagras i filer med namn lika med id för motsvarande attachment-objekt.
 
+### Tabeller
+    create table attachment (
+        id int(7) NOT NULL auto_increment, 
+        report int(7), 
+        name varchar(255) NOT NULL, 
+        mimetype varchar(100), 
+        PRIMARY KEY (id), UNIQUE id (id));
+    
+    CREATE TABLE report (
+        id int(7) NOT NULL auto_increment, 
+        target varchar(255),
+        type varchar(100), 
+        description varchar(255) NOT NULL,
+        createdDate date not null, 
+        changedDate date not null,
+        PRIMARY KEY (id),UNIQUE id (id));
+    
 ### REST-tjänst
 
 Alla tjänster nedan returnerar http-status 200 då de lyckas.
