@@ -27,7 +27,7 @@ Klicka på rapporten
 
 ![](img/reporter-kopiator37-redigera-rapport.png)
 
-Klicka på kamera-symbolen, och ta en bild med kameran.
+Klicka på kamera-symbolen, och ta en bild med kameran, godkänn bilden och klicka Spara i Reporter.
 
 <bild av den nya bilagan>
 
