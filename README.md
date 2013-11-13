@@ -7,7 +7,7 @@ Web-app för att registrera felraporter, förslag mm.
 * en rapport innehåller
     * typ
     * beskrivning 
-    * fotobilaga från kameran
+    * valfritt antal fotobilagor från mobil-kameran
 
 ## Exempel
 
@@ -33,7 +33,7 @@ Klicka på kamera-symbolen, och ta en bild med kameran, godkänn bilden och klic
 
 ## Implementation
 
-Jag trodde jag skulle behöva skriva en riktig App för android och iPhone för att implementer a detta, men det räcker ju med HTML5! Kräver ingen installation av användaren.
+Jag trodde jag skulle behöva skriva en riktig App för android och iPhone för att implementer a detta, men det räcker ju med HTML5! Kräver ingen installation på användarens mobil heller.
 
 ### Arkitektur
 
@@ -43,17 +43,22 @@ Mobile visar webbsidan som hanterar data via en REST-tjänst på servern som lag
 
 REST-tjänst och web-app-fier servas av en node.js-server.
 
-### databasmodell
+### Databasmodell
 
 ![](img/database-model.png)
 
+Uppladdade bilagor lagras i filer med namn lika med id för motsvarande attachment-objekt.
+
 ### REST-tjänst
 
-* GET /ws/targets/:target/reports - returnerar lista av rapporter i JSON
+Alla tjänster nedan returnerar http-status 200 då de lyckas.
+De med id returnerar status 404 om id saknas.
+
+* GET /ws/targets/:target/reports - returnerar lista av rapporter för target i JSON
 * GET /ws/reports/:id - returnerar rapport med id i JSON
 * POST /ws/reports - skapar ny rapport från postad JSON
 * PUT /ws/reports/:id - uppdaterar rapport id från postad JSON
 * DELETE /ws/reports/:id - tar bort raport id
-* POST /ws/attachments - laddar upp mime-typad bilaga från postad binärdata
-* GET /ws/attachments/:id/raw - returnerar mime-typad bilaga i binärform
+* POST /ws/attachments - laddar upp mime-typad bilaga från postad binärdata, och returnerar id för det nya attachment-objektet
+* GET /ws/attachments/:id/raw - returnerar  mime-typad binärdata för attachment med id
 
