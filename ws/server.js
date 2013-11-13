@@ -2,15 +2,15 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 
-var mysql      = require('mysql');
+var mysql = require('mysql');
 var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'reporter',
-    password : '',
-    database : 'reporter'
+    host: 'localhost',
+    user: 'reporter',
+    password: '',
+    database: 'reporter'
 });
 
-connection.connect(function(err) {
+connection.connect(function (err) {
     // connected! (unless `err` is set)
 });
 
@@ -21,13 +21,13 @@ function test_err(err, req, res) {
     }
 }
 
-app.configure(function(){
+app.configure(function () {
     app.use(express.bodyParser());
     app.use(app.router);
 });
 
 // list reports by target
-app.get('/ws/targets/:target/reports', function(req, res) {
+app.get('/ws/targets/:target/reports', function (req, res) {
 //    console.log("get /ws/targets/" + req.params.target + "/reports");
     connection.query('select id, target, type, description, createdDate, changedDate ' +
         'from report where target=? order by changedDate desc', [req.params.target],
@@ -39,7 +39,7 @@ app.get('/ws/targets/:target/reports', function(req, res) {
 });
 
 // get report by id as json list
-app.get('/ws/reports/:id', function(req, res) {
+app.get('/ws/reports/:id', function (req, res) {
 //    console.log("get /ws/reports/" + req.params.id);
     // query report by id
     connection.query('select id, target, type, description, createdDate, changedDate ' +
@@ -63,17 +63,19 @@ app.get('/ws/reports/:id', function(req, res) {
 });
 
 // create report from json
-app.post('/ws/reports', function(req, res) {
+app.post('/ws/reports', function (req, res) {
 //    console.log("post /ws/reports " + req.body);
     var now = new Date();
     connection.query('insert into report(target, type, description, createdDate, changedDate) ' +
         'values(?, ?, ?, ?, ?)', [req.body.target, req.body.type, req.body.description, now, now],
-        function(err, result) {
+        function (err, result) {
             test_err(err, req, res);
             var report_id = result.insertId;
             if (req.body.attachments != undefined && req.body.attachments.length > 0) {
-                connection.query('update attachment set report=? where id in (?)', [report_id, req.body.attachments.map(function(att) {return att.id;})],
-                    function(err, result2) {
+                connection.query('update attachment set report=? where id in (?)', [report_id, req.body.attachments.map(function (att) {
+                    return att.id;
+                })],
+                    function (err, result2) {
                         test_err(err, req, res);
                         res.send("" + report_id);
                     }
@@ -86,18 +88,20 @@ app.post('/ws/reports', function(req, res) {
 });
 
 // update report by id supplied as json
-app.put('/ws/reports/:id', function(req, res) {
+app.put('/ws/reports/:id', function (req, res) {
 //    console.log("put /ws/reports/" + req.params.id, req.body);
     connection.query('update report set type=?, description=?, changedDate=? where id=?', [req.body.type, req.body.description, new Date(), req.body.id],
-        function(err, result) {
+        function (err, result) {
             test_err(err, req, res);
             if (result.length == 0) {
                 send(404, 'report ' + req.params.id + ' not found');
             } else {
                 if (req.body.attachments != undefined && req.body.attachments.length > 0) {
                     connection.query('update attachment set report=? where id in (?)',
-                            [req.body.id, req.body.attachments.map(function(att) {return att.id;})],
-                        function(err, result2) {
+                        [req.body.id, req.body.attachments.map(function (att) {
+                            return att.id;
+                        })],
+                        function (err, result2) {
                             test_err(err, req, res);
                             res.send("ok");
                         }
@@ -107,11 +111,11 @@ app.put('/ws/reports/:id', function(req, res) {
                 }
             }
         }
-     );
+    );
 });
 
 // delete report by id
-app.del('/ws/reports/:id', function(req, res) {
+app.del('/ws/reports/:id', function (req, res) {
 //    console.log("delete /ws/reports/" + req.params.id);
     connection.query('delete from report where id=?', [req.params.id],
         function (err, reports) {
@@ -121,13 +125,13 @@ app.del('/ws/reports/:id', function(req, res) {
 });
 
 // upload attachment return new attachment id
-app.post('/ws/attachments', function(req, res) {
+app.post('/ws/attachments', function (req, res) {
 //    console.log("post /ws/attachments ", req.files);
     var file = req.files.afile;
     connection.query('insert into attachment (name, mimetype) values (?, ?)', [file.name, file.type], function (err, attachment) {
         test_err(err, req, res);
         var attachment_id = attachment.insertId;
-        fs.rename(file.path, 'uploads/' + attachment_id, function(err) {
+        fs.rename(file.path, 'uploads/' + attachment_id, function (err) {
             if (err) throw err;
             res.send("" + attachment_id);
         });
@@ -135,7 +139,7 @@ app.post('/ws/attachments', function(req, res) {
 });
 
 // download attachment raw (binary with specified mime type)
-app.get('/ws/attachments/:id/raw', function(req, res) {
+app.get('/ws/attachments/:id/raw', function (req, res) {
 //    console.log("get /ws/attachments/" + req.params.id + '/raw');
     connection.query('select id, mimetype from attachment where id=?', [req.params.id],
         function (err, attachments) {

@@ -46,9 +46,9 @@ body {
 }
 
 ul.report-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0 0 0.3em 0;
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 0.3em 0;
 }
 
 ul.report-list li {
@@ -66,21 +66,18 @@ ul.report-list li {
 
 }
 
-ul.attachmentlist
-{
+ul.attachmentlist {
     padding: 0 0 0 0;
     margin: 0;
 }
 
-ul.attachmentlist li
-{
+ul.attachmentlist li {
     float: left;
     list-style-type: none;
     padding: 0 5px 0 0;
     margin: 0;
 }
 
-.image-upload > input
-{
+.image-upload > input {
     display: none;
 }
