@@ -62,9 +62,21 @@ angular.module('repository', []).
             },
 
             // uploads file f and when done, calls onReady with the created id for it
-            uploadFile: function (file, onReady) {
+            uploadFile: function (file, onReady, showProgress) {
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "ws/attachments", true);
+                if (showProgress != undefined) {
+                    xhr.upload.addEventListener("progress", function(e) {
+                        if (e.lengthComputable) {
+                            var percentage = Math.round((e.loaded * 100) / e.total);
+                            showProgress(percentage);
+                        }
+                    }, false);
+
+                    xhr.upload.addEventListener("load", function(e){
+                        showProgress(100);
+                    }, false);
+                }
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         if (onReady != undefined) {

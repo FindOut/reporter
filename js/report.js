@@ -53,6 +53,14 @@ function EditCtrl($scope, $location, $routeParams, repo) {
         $scope.isClean = function () {
             return angular.equals(report, $scope.report);
         };
+        $scope.imageByMime = function(mime) {
+            console.log("imageByMime(" + mime + ")");
+            if (/image\/.*/.test(mime)) {
+                return "camera.png";
+            } else {
+                return "microphone.png";
+            }
+        };
         $scope.destroy = function () {
             repo.deleteReport($scope.report.id);
             $location.path('/');
@@ -82,9 +90,12 @@ function addAttachmentHandler($scope, repo) {
             }
             $scope.report.attachments.push({id: attachment_id, mimetype: f.type});
             $scope.$apply();
+        }, function(percent) {
+            console.log("percent ready=", percent);
         });
     }
-    document.getElementById("file-upload").addEventListener('change', handleFileSelect, false);
+    document.getElementById("image-upload").addEventListener('change', handleFileSelect, false);
+    document.getElementById("audio-upload").addEventListener('change', handleFileSelect, false);
 }
 
 function getQueryParam(key) {

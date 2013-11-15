@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="icons.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,13 +25,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="12.142857"
-     inkscape:cy="520"
+     inkscape:cx="-350.71429"
+     inkscape:cy="862.85714"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1600"
-     inkscape:window-height="848"
+     inkscape:window-height="876"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1" />
@@ -77,5 +77,106 @@
        x="185.71429"
        y="418.07648"
        ry="0" />
+    <g
+       id="g3759">
+      <path
+         inkscape:export-ydpi="14.4"
+         inkscape:export-xdpi="14.4"
+         inkscape:export-filename="/home/dag/ideaprojects/reporter/img/microphone.png"
+         sodipodi:open="true"
+         sodipodi:end="3.0828368"
+         sodipodi:start="0"
+         d="m 385.7143,775.2193 a 57.142857,57.142857 0 0 1 -114.18711,3.35555"
+         sodipodi:ry="57.142857"
+         sodipodi:rx="57.142857"
+         sodipodi:cy="775.2193"
+         sodipodi:cx="328.57144"
+         id="path2985"
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:20;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="arc" />
+      <rect
+         inkscape:export-ydpi="14.4"
+         inkscape:export-xdpi="14.4"
+         inkscape:export-filename="/home/dag/ideaprojects/reporter/img/microphone.png"
+         rx="25.039074"
+         ry="16.707172"
+         y="680.18036"
+         x="303.58167"
+         height="121.50671"
+         width="50.078148"
+         id="rect3755"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.44208157;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         inkscape:export-ydpi="14.4"
+         inkscape:export-xdpi="14.4"
+         inkscape:export-filename="/home/dag/ideaprojects/reporter/img/microphone.png"
+         ry="6.7133656"
+         y="834.10016"
+         x="323.21588"
+         height="47.95261"
+         width="10.809752"
+         id="rect3757"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:12.04739094;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <g
+       id="g3784"
+       inkscape:export-filename="/home/dag/ideaprojects/reporter/img/microphone-plus.png"
+       inkscape:export-xdpi="14"
+       inkscape:export-ydpi="14">
+      <g
+         id="g3775">
+        <path
+           inkscape:export-ydpi="14.4"
+           inkscape:export-xdpi="14.4"
+           inkscape:export-filename="/home/dag/ideaprojects/reporter/img/microphone.png"
+           sodipodi:open="true"
+           sodipodi:end="3.0828368"
+           sodipodi:start="0"
+           d="m 385.7143,775.2193 a 57.142857,57.142857 0 0 1 -114.18711,3.35555"
+           sodipodi:ry="57.142857"
+           sodipodi:rx="57.142857"
+           sodipodi:cy="775.2193"
+           sodipodi:cx="328.57144"
+           id="path3766"
+           style="color:#000000;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#969696;stroke-width:20;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           sodipodi:type="arc"
+           transform="translate(257.14286,-2.8571429)" />
+        <rect
+           inkscape:export-ydpi="14.4"
+           inkscape:export-xdpi="14.4"
+           inkscape:export-filename="/home/dag/ideaprojects/reporter/img/microphone.png"
+           rx="25.039074"
+           ry="16.707172"
+           y="677.32324"
+           x="560.72455"
+           height="121.50671"
+           width="50.078148"
+           id="rect3768"
+           style="color:#000000;fill:#969696;fill-opacity:1;fill-rule:evenodd;stroke:#969696;stroke-width:1.44199999999999995;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <rect
+           inkscape:export-ydpi="14.4"
+           inkscape:export-xdpi="14.4"
+           inkscape:export-filename="/home/dag/ideaprojects/reporter/img/microphone.png"
+           ry="6.7133656"
+           y="831.24304"
+           x="580.35876"
+           height="47.95261"
+           width="10.809752"
+           id="rect3770"
+           style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#969696;stroke-width:12.04739093999999966;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3780"
+         y="824.05139"
+         x="585.76361"
+         style="font-size:36px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:144px"
+           y="824.05139"
+           x="585.76361"
+           id="tspan3782"
+           sodipodi:role="line">+</tspan></text>
+    </g>
   </g>
 </svg>

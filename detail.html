@@ -12,11 +12,13 @@
 
     <br>
     <ul class="attachmentlist" ng-repeat="attachment in report.attachments">
-        <li ng-click="viewImage(attachment.id)"><img src="img/camera.png"></li>
+        <li ng-click="viewImage(attachment.id)"><img ng-src="img/{{imageByMime(attachment.mimetype)}}"></li>
     </ul>
     <div class="image-upload">
-        <label for="file-upload"><img src="img/camera-plus.png"/></label>
-        <input id="file-upload" type="file" accept="image/*" capture="camera">
+        <label for="image-upload"><img src="img/camera-plus.png"/></label>
+        <input id="image-upload" type="file" accept="image/*" capture="camera">
+        <label for="audio-upload"><img src="img/microphone-plus.png"/></label>
+        <input id="audio-upload" type="file" accept="audio/*" capture="microphone">
     </div>
     <br>
 
