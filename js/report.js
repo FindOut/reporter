@@ -82,16 +82,23 @@ function ViewImageCtrl($scope, $location, $routeParams, repo) {
 }
 
 function addAttachmentHandler($scope, repo) {
+    $( "#progressbar" ).progressbar({
+        value: 0
+    });
+    $('#bardiv').hide();
     var handleFileSelect = function (evt) {
+        $('#bardiv').show();
         var f = evt.target.files[0];
         repo.uploadFile(f, function (attachment_id) {
             if ($scope.report.attachments == undefined) {
                 $scope.report.attachments = [];
             }
             $scope.report.attachments.push({id: attachment_id, mimetype: f.type});
+            $('#bardiv').hide();
             $scope.$apply();
         }, function(percent) {
             console.log("percent ready=", percent);
+            $( "#progressbar" ).progressbar( "option", "value", percent );
         });
     }
     document.getElementById("image-upload").addEventListener('change', handleFileSelect, false);

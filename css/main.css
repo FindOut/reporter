@@ -1,3 +1,17 @@
+#bardiv {
+    margin: .5em 0 0 0;
+    position:relative;
+}
+#progressbar {
+    height: 1.5em;
+}
+#progresstext {
+    width: 100%;
+    position:absolute;
+    top:20%;
+    left:0.5em;
+}
+
 img.fitpage {
     max-width: 100%;
     max-height: 100%;
