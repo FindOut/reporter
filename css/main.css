@@ -1,3 +1,35 @@
+.target-title {
+    font-size: 140%;
+    padding: 0.2em 0 0.3em 0;
+    margin: 0;
+    text-align: center;
+}
+
+.target-title-button {
+    float: right;
+    font-size: 20pt;
+    text-decoration:none;
+    margin: 0.1em 0.3em 0 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+div.search-bar {
+    background-color: #C9C9CE;
+    margin: 0;
+    display: block;
+    overflow: hidden;
+    padding: 0 0 0 0
+}
+
+input.search-text {
+    width: 100%;
+    border-radius: 0.5em;
+    margin: 0.5em;
+    padding: 2px 2px 2px 4px;
+}
+
 #bardiv {
     margin: .5em 0 0 0;
     position:relative;
@@ -17,19 +49,6 @@ img.fitpage {
     max-height: 100%;
 }
 
-span {
-    display: block;
-    overflow: hidden;
-    padding: 0 6px 0 0
-}
-
-input.search-query {
-    width: 100%;
-    border-radius: 0.3em;
-    margin: 0;
-    padding: 2px 2px 2px 4px;
-}
-
 textarea {
     width: 100%;
 }
@@ -43,38 +62,25 @@ input.add {
     font-size: 1em;
 }
 
-.target-title-button {
-    float: right;
-    font-size: 20pt;
-    text-decoration:none;
-}
-
-.target-title {
-    font-size: 140%;
-    padding: 0 0 0.2em 0;
-    margin: 0;
-    text-align: center;
-}
-
 html {
     padding: 0;
     margin: 0;
 }
 
 body {
-    background-color: #C1E2F0;
-    padding: 0 0.4em 0.2em 0.3em;
+    background-color: #F7F7F7;
+    padding: 0;
     margin: 0;
 }
 
 ul.report-list {
     list-style-type: none;
     padding: 0;
-    margin: 0 0 0.3em 0;
 }
 
 ul.report-list li {
-    background-color: #eee;
+    margin: 0 0 0.3em 0;
+    background-color: #fff;
     padding: 0.1em 0.2em 0.1em 0.25em;
     margin: 0;
     border-radius: 0.3em;

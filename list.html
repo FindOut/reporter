@@ -1,6 +1,10 @@
+<div>
 <a class="target-title-button" href="#/new">+</a>
 <h2 class="target-title">{{target}}</h2>
-<span><input class="search-query" type="text" ng-model="search" placeholder="Sök"></span>
+</div>
+<div class="search-bar">
+<input class="search-text" type="text" ng-model="search" placeholder="Sök">
+</div>
 
 <div ng-show="loading">Hämtar rapporter...</div>
 <div ng-show="!loading && reports.length == 0">Inga rapporter.</div>
