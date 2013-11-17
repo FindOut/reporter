@@ -38,14 +38,22 @@ input.add {
     margin: 10px 0 10px 0;
 }
 
-html, input, textarea, label, button {
+* {
     font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     font-size: 1em;
 }
 
+.target-title-button {
+    float: right;
+    font-size: 20pt;
+    text-decoration:none;
+}
+
 .target-title {
+    font-size: 140%;
     padding: 0 0 0.2em 0;
     margin: 0;
+    text-align: center;
 }
 
 html {
@@ -70,6 +78,10 @@ ul.report-list li {
     padding: 0.1em 0.2em 0.1em 0.25em;
     margin: 0;
     border-radius: 0.3em;
+}
+
+ul.report-list li.selected-true {
+    background-color: #fff;
 }
 
 .report-list-date {

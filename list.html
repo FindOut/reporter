@@ -1,11 +1,12 @@
-<span><input type="text" ng-model="search" class="search-query" placeholder="Söktext">
-<input class="add" type="button" value="Ny rapport" onclick="window.location.href = '#/new';"></span>
+<a class="target-title-button" href="#/new">+</a>
+<h2 class="target-title">{{target}}</h2>
+<span><input class="search-query" type="text" ng-model="search" placeholder="Sök"></span>
 
 <div ng-show="loading">Hämtar rapporter...</div>
 <div ng-show="!loading && reports.length == 0">Inga rapporter.</div>
-<ul class="report-list"
-    ng-repeat="report in reports | filter:context.target:strict | filter:search | orderBy:'-createdDate'">
-    <li ng-click="viewReport(report.id)">
+<ul class="report-list">
+    <li ng-repeat="report in reports | filter:context.target:strict | filter:search | orderBy:'-createdDate'"
+        class="selected-{{selectedReport(report.id)}}" ng-click="viewReport(report.id)">
         <div><span class="report-list-date">{{formatDate(report.changedDate)}}</span></div>
         <div><span class="report-list-description">{{report.description}}</span></div>
     </li>

@@ -15,6 +15,7 @@ angular.module('report', ['repository']).
 function MainCtrl($scope, $location, context) {
     context.target = getQueryParam('target');
     $scope.target = context.target;
+    window.currentReportId = 0;
 }
 
 function ListCtrl($scope, repo, context, $location) {
@@ -30,7 +31,11 @@ function ListCtrl($scope, repo, context, $location) {
         $scope.$apply();
     });
     $scope.viewReport = function (id) {
+        window.currentReportId = id;
         window.location.href = "#/edit/" + id;
+    }
+    $scope.selectedReport = function(id) {
+        return id == window.currentReportId;
     }
 }
 
@@ -39,8 +44,9 @@ function CreateCtrl($scope, $location, $timeout, context, repo) {
     $scope.save = function () {
         $scope.report.target = context.target;
         $scope.report.createdDate = new Date().toISOString();
-        repo.addReport(angular.copy($scope.report), function () {
+        repo.addReport(angular.copy($scope.report), function (new_id) {
             $timeout(function () {
+                window.currentReportId  = new_id;
                 $location.path('/');
             });
         });
@@ -54,7 +60,6 @@ function EditCtrl($scope, $location, $routeParams, repo) {
             return angular.equals(report, $scope.report);
         };
         $scope.imageByMime = function(mime) {
-            console.log("imageByMime(" + mime + ")");
             if (/image\/.*/.test(mime)) {
                 return "camera.png";
             } else {
@@ -97,8 +102,7 @@ function addAttachmentHandler($scope, repo) {
             $('#bardiv').hide();
             $scope.$apply();
         }, function(percent) {
-            console.log("percent ready=", percent);
-            $( "#progressbar" ).progressbar( "option", "value", percent );
+            $("#progressbar").progressbar("option", "value", percent);
         });
     }
     document.getElementById("image-upload").addEventListener('change', handleFileSelect, false);
