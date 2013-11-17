@@ -132,15 +132,40 @@ app.put('/ws/reports/:id', function (req, res) {
     });
 });
 
-// delete report by id
+// delete report by id, and any attachment rows and files for the report
 app.del('/ws/reports/:id', function (req, res) {
-//    console.log("delete /ws/reports/" + req.params.id);
+    var report_id = req.params.id;
+    console.log("delete /ws/reports/" + report_id);
     mysqlPool.getConnection(function(err, connection) {
         test_err(err, req, res);
-        connection.query('delete from report where id=?', [req.params.id],
+        connection.query('delete from report where id=?', [report_id],
             function (err, reports) {
                 test_err(err, req, res, connection);
-                connection.release();
+                console.log("deleted report with id=" + report_id);
+                connection.query('select id from attachment where report=?', [report_id],
+                    function (err, attachments) {
+                        connection.query('delete from attachment where report=?', [report_id],
+                            function (err, reports) {
+                                if (err) {
+                                    console.log("attachments could not be deleted for deleted report id " + report_id);
+                                } else {
+                                    console.log("deleted attachments with report=" + report_id);
+                                }
+                            }
+                        );
+                        for (var i in attachments) {
+                            var file_to_delete = 'uploads/' + attachments[i].id;
+                            fs.unlink(file_to_delete, function (err) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log("deleted attachment file " + file_to_delete);
+                                }
+                            });
+                        }
+                        connection.release();
+                    }
+                );
             }
         );
     });
