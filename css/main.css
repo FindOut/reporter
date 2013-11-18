@@ -1,5 +1,6 @@
 .target-title {
     font-size: 140%;
+    font-weight: 600;
     padding: 0.2em 0 0.3em 0;
     margin: 0;
     text-align: center;
@@ -7,9 +8,9 @@
 
 .target-title-button {
     float: right;
-    font-size: 20pt;
+    font-size: 26pt;
     text-decoration:none;
-    margin: 0.1em 0.3em 0 0;
+    margin: 0.1em 0.5em 0 0;
     position: absolute;
     right: 0;
     top: 0;
@@ -17,17 +18,20 @@
 
 div.search-bar {
     background-color: #C9C9CE;
-    margin: 0;
-    display: block;
-    overflow: hidden;
-    padding: 0 0 0 0
+    width:100%;
+    min-width:300px;
+    max-width:600px;
+    display: -webkit-flex;
+    display: flex;
 }
 
 input.search-text {
-    width: 100%;
-    border-radius: 0.5em;
-    margin: 0.5em;
-    padding: 2px 2px 2px 4px;
+    -webkit-flex: 1;
+    flex: 1;
+    margin: 0.5em 0.4em 0.5em 0.4em;
+    border-radius: 0.3em;
+    border: 0;
+    padding: 0.1em 0.1em 0.1em 0.1em;
 }
 
 #bardiv {
@@ -59,7 +63,7 @@ input.add {
 
 * {
     font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    font-size: 1em;
+    font-size: 1.05em;
 }
 
 html {
@@ -68,22 +72,24 @@ html {
 }
 
 body {
-    background-color: #F7F7F7;
+    background-color: #f0f0f0;
     padding: 0;
     margin: 0;
 }
 
 ul.report-list {
     list-style-type: none;
-    padding: 0;
+    background-color: #fff;
+    padding: 0 0.3em 0 0.3em;
+    margin: 0;
 }
 
 ul.report-list li {
     margin: 0 0 0.3em 0;
-    background-color: #fff;
-    padding: 0.1em 0.2em 0.1em 0.25em;
+    padding: 0.3em 0em 0.3em 0em;
     margin: 0;
-    border-radius: 0.3em;
+    border: 0;
+    border-bottom:0.1em solid #f0f0f0;
 }
 
 ul.report-list li.selected-true {
