@@ -40,6 +40,7 @@ function ListCtrl($scope, repo, context, $location) {
 }
 
 function CreateCtrl($scope, $location, $timeout, context, repo) {
+    $('#aForm').height(window.innerHeight + 'px');
     addAttachmentHandler($scope, repo);
     $scope.save = function () {
         $scope.report.target = context.target;
@@ -54,6 +55,7 @@ function CreateCtrl($scope, $location, $timeout, context, repo) {
 }
 
 function EditCtrl($scope, $location, $routeParams, repo) {
+    $('#aForm').height(window.innerHeight + 'px');
     repo.getReport($routeParams.reportId, function (report) {
         $scope.report = angular.copy(report);
         $scope.isClean = function () {
@@ -80,6 +82,18 @@ function EditCtrl($scope, $location, $routeParams, repo) {
         }
         $scope.$apply();
     });
+}
+
+function resizeTextArea() {
+    //Wrap your form contents in a div and get its offset height
+    var heightOfForm = document.getElementById('formWrapper').offsetHeight;
+    //Get height of body (accounting for user-installed toolbars)
+    var heightOfBody = document.body.clientHeight;
+    var buffer = 35; //Accounts for misc. padding, etc.
+    //Set the height of the textarea dynamically
+    document.getElementById('aForm').style.height =
+        (heightOfBody - heightOfForm) - buffer;
+    //NOTE: For extra panache, add onresize="resizeTextArea()" to the body
 }
 
 function ViewImageCtrl($scope, $location, $routeParams, repo) {

@@ -1,36 +1,37 @@
-<h2 class="target-title">{{target}}</h2>
 <form name="myForm">
-    <div class="control-group" ng-class="{error: myForm.type.$invalid}">
-        <select name="type" ng-model="report.type" onchange="$('#description').focus()" required>
-            <option value="problem">Felanmälan</option>
-            <option value="suggestion">Förslag</option>
-            <option value="success">Framgångssaga</option>
-        </select>
+    <div id="aForm">
+        <div class="toprow">
+            <a class="left-button" href="#/"><img src="img/x.png"/></a>
+            <h2 class="centered-title">{{target}}</h2>
+            <a class="right-button" ng-click="destroy()"><img src="img/delete.png"/></a>
+            <a class="right-button" ng-click="save()"><img src="img/done-check.png"/></a>
+        </div>
+        <div class="control-group" ng-class="{error: myForm.type.$invalid}">
+            <select name="type" ng-model="report.type" onchange="$('#description').focus()" required>
+                <option value="problem">Felanmälan</option>
+                <option value="suggestion">Förslag</option>
+                <option value="success">Framgångssaga</option>
+            </select>
+        </div>
+
+        <textarea id="description" name="description" ng-model="report.description"
+                  ng-disabled="myForm.type.$invalid" placeholder="Beskrivning"></textarea>
+        <br>
+
+        <ul class="attachmentlist" ng-repeat="attachment in report.attachments">
+            <li ng-click="viewImage(attachment.id)"><img ng-src="img/{{imageByMime(attachment.mimetype)}}"></li>
+        </ul>
+        <div class="image-upload">
+            <label for="image-upload"><img src="img/camera-plus.png"/></label>
+            <input id="image-upload" type="file" accept="image/*" capture="camera">
+            <label for="audio-upload"><img src="img/microphone-plus.png"/></label>
+            <input id="audio-upload" type="file" accept="audio/*" capture="microphone">
+        </div>
+        <br>
+
+        <div id="bardiv">
+            <div id="progressbar"></div>
+            <div id="progresstext">Sänder fil...</div>
+        </div>
     </div>
-
-    <textarea id="description" name="description" ng-model="report.description"
-              ng-disabled="myForm.type.$invalid" placeholder="Beskrivning"></textarea>
-
-    <br>
-    <ul class="attachmentlist" ng-repeat="attachment in report.attachments">
-        <li ng-click="viewImage(attachment.id)"><img ng-src="img/{{imageByMime(attachment.mimetype)}}"></li>
-    </ul>
-    <div class="image-upload">
-        <label for="image-upload"><img src="img/camera-plus.png"/></label>
-        <input id="image-upload" type="file" accept="image/*" capture="camera">
-        <label for="audio-upload"><img src="img/microphone-plus.png"/></label>
-        <input id="audio-upload" type="file" accept="audio/*" capture="microphone">
-    </div>
-    <br>
-
-    <a href="#/" class="btn">Avbryt</a>
-    <button ng-click="save()" ng-disabled="isClean() || myForm.$invalid"
-            class="btn btn-primary">Spara
-    </button>
-    <button ng-click="destroy()"
-            ng-show="report.id" class="btn btn-danger">Ta bort
-    </button>
-    <div id="bardiv">
-        <div id="progressbar"></div>
-        <div id="progresstext">Sänder fil...</div>
-    </div></form>
+</form>
