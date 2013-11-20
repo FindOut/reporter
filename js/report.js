@@ -20,10 +20,7 @@ function MainCtrl($scope, $location, context) {
 
 function ListCtrl($scope, repo, context, $location) {
     $scope.loading = true;
-    $scope.formatDate = function (isoString) {
-        var date = new Date(isoString);
-        return date.format("yy-mm-dd HH:MM:ss");
-    };
+    $scope.formatDate = dateFormatter;
     $scope.context = context;
     repo.listReports(context.target, function (list) {
         $scope.reports = list;
@@ -129,4 +126,24 @@ function getQueryParam(key) {
         return undefined;
     }
     return temp[1];
+}
+
+function dateFormatter(isoString) {
+    var minMillis = 60000;
+    var hourMillis = 60 * minMillis;
+    var dayMillis = 24 * hourMillis;
+    var date = new Date(isoString);
+    var now = new Date();
+    var diff = now - date;
+    if (diff < 35000) {
+        return 'now';
+    } else if (diff < hourMillis) {
+        return Math.round(diff / minMillis) + " min";
+    } else if (diff < dayMillis) {
+        return Math.round(diff / hourMillis) + " hours";
+    } else if (diff < 2.6 * dayMillis) {
+        return Math.round(diff / dayMillis) + " days";
+    } else {
+        return date.format("d mmm");
+    }
 }
