@@ -10,181 +10,155 @@ var mysqlPool = mysql.createPool({
     database: 'reporter'
 });
 
-function test_err(err, req, res, connection) {
-    if (err) {
-        res.send(500);
-        if (connection != undefined) {
-            connection.release();
-        }
-        throw err;
-    }
-}
-
 app.configure(function () {
     app.use(express.bodyParser());
     app.use(app.router);
 });
 
+function test_err(err, res) {
+    if (err) {
+        res.send(500, err);
+        throw err;
+    }
+}
+
 // list reports by target
 app.get('/ws/targets/:target/reports', function (req, res) {
-//    console.log("get /ws/targets/" + req.params.target + "/reports");
-    mysqlPool.getConnection(function(err, connection) {
-        test_err(err, req, res, connection);
-        connection.query('select id, target, type, description, createdDate, changedDate ' +
-            'from report where target=? order by changedDate desc', [req.params.target],
-            function (err, result) {
-                test_err(err, req, res);
-                res.send(result);
-            }
-        );
-        connection.release();
-    });
+    console.log("get /ws/targets/" + req.params.target + "/reports");
+    mysqlPool.query('select id, target, type, description, createdDate, changedDate ' +
+        'from report where target=? order by changedDate desc', [req.params.target],
+        function (err, result) {
+            test_err(err, res);
+            res.send(result);
+        }
+    );
 });
 
 // get report by id as json list
 app.get('/ws/reports/:id', function (req, res) {
 //    console.log("get /ws/reports/" + req.params.id);
     // query report by id
-    mysqlPool.getConnection(function(err, connection) {
-        test_err(err, req, res);
-        connection.query('select id, target, type, description, createdDate, changedDate ' +
-            'from report where id=?', [req.params.id],
-            function (err, reports) {
-                test_err(err, req, res, connection);
-                if (reports.length == 0) {
-                    send(404, 'report ' + req.params.id + ' not found');
-                    connection.release();
-                } else {
-                    // query all attachments for this report and put in a report attribute
-                    connection.query('select id, mimetype from attachment where report=?', [req.params.id],
-                        function (err, attachments) {
-                            test_err(err, req, res, connection);
-                            reports[0].attachments = attachments;
-                            res.send(reports);
-                            connection.release();
-                        }
-                    );
-                }
+    mysqlPool.query('select id, target, type, description, createdDate, changedDate ' +
+        'from report where id=?', [req.params.id],
+        function (err, reports) {
+            test_err(err, res);
+            if (reports.length == 0) {
+                send(404, 'report ' + req.params.id + ' not found');
+            } else {
+                // query all attachments for this report and put in a report attribute
+                mysqlPool.query('select id, mimetype from attachment where report=?', [req.params.id],
+                    function (err, attachments) {
+                        test_err(err, res);
+                        reports[0].attachments = attachments;
+                        res.send(reports);
+                    }
+                );
             }
-        );
-    });
+        }
+    );
 });
 
 // create report from json
 app.post('/ws/reports', function (req, res) {
 //    console.log("post /ws/reports " + req.body);
-    mysqlPool.getConnection(function(err, connection) {
-        test_err(err, req, res);
-        var now = new Date();
-        connection.query('insert into report(target, type, description, createdDate, changedDate) ' +
-            'values(?, ?, ?, ?, ?)', [req.body.target, req.body.type, req.body.description, now, now],
-            function (err, result) {
-                test_err(err, req, res, connection);
-                var report_id = result.insertId;
-                if (req.body.attachments != undefined && req.body.attachments.length > 0) {
-                    connection.query('update attachment set report=? where id in (?)', [report_id, req.body.attachments.map(function (att) {
-                        return att.id;
-                    })], function (err, result2) {
-                            test_err(err, req, res, connection);
-                            res.send("" + report_id);
-                            connection.release();
-                        }
-                    );
-                } else {
+    var now = new Date();
+    mysqlPool.query('insert into report(target, type, description, createdDate, changedDate) ' +
+        'values(?, ?, ?, ?, ?)', [req.body.target, req.body.type, req.body.description, now, now],
+        function (err, result) {
+            test_err(err, res);
+            var report_id = result.insertId;
+            if (req.body.attachments != undefined && req.body.attachments.length > 0) {
+                var attachementIds = req.body.attachments.map(function (att) {
+                    return att.id;
+                });
+                mysqlPool.query('update attachment set report=? where id in (?)', [report_id, attachementIds], function (err, result2) {
+                    test_err(err, res);
                     res.send("" + report_id);
-                    connection.release();
-                }
+                });
+            } else {
+                res.send("" + report_id);
+
             }
-        );
-    });
+        }
+    );
 });
 
 // update report by id supplied as json
 app.put('/ws/reports/:id', function (req, res) {
 //    console.log("put /ws/reports/" + req.params.id, req.body);
-    mysqlPool.getConnection(function(err, connection) {
-        test_err(err, req, res);
-        connection.query('update report set type=?, description=?, changedDate=? where id=?', [req.body.type, req.body.description, new Date(), req.body.id],
-            function (err, result) {
-                test_err(err, req, res, connection);
-                if (result.length == 0) {
-                    send(404, 'report ' + req.params.id + ' not found');
-                    connection.release();
+    mysqlPool.query('update report set type=?, description=?, changedDate=? where id=?', [req.body.type, req.body.description, new Date(), req.body.id],
+        function (err, result) {
+            test_err(err, res);
+            if (result.length == 0) {
+                send(404, 'report ' + req.params.id + ' not found');
+
+            } else {
+                if (req.body.attachments != undefined && req.body.attachments.length > 0) {
+                    mysqlPool.query('update attachment set report=? where id in (?)',
+                        [req.body.id, req.body.attachments.map(function (att) {
+                            return att.id;
+                        })],
+                        function (err, result2) {
+                            test_err(err, res);
+                            res.send("ok");
+
+                        }
+                    );
                 } else {
-                    if (req.body.attachments != undefined && req.body.attachments.length > 0) {
-                        connection.query('update attachment set report=? where id in (?)',
-                            [req.body.id, req.body.attachments.map(function (att) {
-                                return att.id;
-                            })],
-                            function (err, result2) {
-                                test_err(err, req, res, connection);
-                                res.send("ok");
-                                connection.release();
-                            }
-                        );
-                    } else {
-                        res.send('ok');
-                        connection.release();
-                    }
+                    res.send('ok');
+
                 }
             }
-        );
-    });
+        }
+    );
 });
 
 // delete report by id, and any attachment rows and files for the report
 app.del('/ws/reports/:id', function (req, res) {
     var report_id = req.params.id;
     console.log("delete /ws/reports/" + report_id);
-    mysqlPool.getConnection(function(err, connection) {
-        test_err(err, req, res);
-        connection.query('delete from report where id=?', [report_id],
-            function (err, reports) {
-                test_err(err, req, res, connection);
-                console.log("deleted report with id=" + report_id);
-                connection.query('select id from attachment where report=?', [report_id],
-                    function (err, attachments) {
-                        connection.query('delete from attachment where report=?', [report_id],
-                            function (err, reports) {
-                                if (err) {
-                                    console.log("attachments could not be deleted for deleted report id " + report_id);
-                                } else {
-                                    console.log("deleted attachments with report=" + report_id);
-                                }
+    mysqlPool.query('delete from report where id=?', [report_id],
+        function (err, reports) {
+            test_err(err, res);
+            console.log("deleted report with id=" + report_id);
+            mysqlPool.query('select id from attachment where report=?', [report_id],
+                function (err, attachments) {
+                    mysqlPool.query('delete from attachment where report=?', [report_id],
+                        function (err, reports) {
+                            if (err) {
+                                console.log("attachments could not be deleted for deleted report id " + report_id);
+                            } else {
+                                console.log("deleted attachments with report=" + report_id);
                             }
-                        );
-                        for (var i in attachments) {
-                            var file_to_delete = 'uploads/' + attachments[i].id;
-                            fs.unlink(file_to_delete, function (err) {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    console.log("deleted attachment file " + file_to_delete);
-                                }
-                            });
                         }
-                        connection.release();
+                    );
+                    for (var i in attachments) {
+                        var file_to_delete = 'uploads/' + attachments[i].id;
+                        fs.unlink(file_to_delete, function (err) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("deleted attachment file " + file_to_delete);
+                            }
+                        });
                     }
-                );
-            }
-        );
-    });
+                }
+            );
+        }
+    );
 });
 
 // upload attachment return new attachment id
 app.post('/ws/attachments', function (req, res) {
 //    console.log("post /ws/attachments ", req.files);
-    mysqlPool.getConnection(function(err, connection) {
-        test_err(err, req, res);
-        var file = req.files.afile;
-        connection.query('insert into attachment (name, mimetype) values (?, ?)', [file.name, file.type], function (err, attachment) {
-            test_err(err, req, res, connection);
-            var attachment_id = attachment.insertId;
-            fs.rename(file.path, 'uploads/' + attachment_id, function (err) {
-                test_err(err, req, res, connection);
-                res.send("" + attachment_id);
-                connection.release();
-            });
+    var file = req.files.afile;
+    mysqlPool.query('insert into attachment (name, mimetype) values (?, ?)', [file.name, file.type], function (err, attachment) {
+        test_err(err, res);
+        var attachment_id = attachment.insertId;
+        fs.rename(file.path, 'uploads/' + attachment_id, function (err) {
+            test_err(err, res);
+            res.send("" + attachment_id);
+
         });
     });
 });
@@ -192,21 +166,17 @@ app.post('/ws/attachments', function (req, res) {
 // download attachment raw (binary with specified mime type)
 app.get('/ws/attachments/:id/raw', function (req, res) {
 //    console.log("get /ws/attachments/" + req.params.id + '/raw');
-    mysqlPool.getConnection(function(err, connection) {
-        test_err(err, req, res);
-        connection.query('select id, mimetype from attachment where id=?', [req.params.id],
-            function (err, attachments) {
-                test_err(err, req, res, connection);
-                if (attachments.length == 0) {
-                    send(404, 'attachment ' + req.params.id + ' not found');
-                } else {
-                    res.type(attachments[0].mimetype);
-                    res.sendfile('uploads/' + req.params.id);
-                }
-                connection.release();
+    mysqlPool.query('select id, mimetype from attachment where id=?', [req.params.id],
+        function (err, attachments) {
+            test_err(err, res);
+            if (attachments.length == 0) {
+                send(404, 'attachment ' + req.params.id + ' not found');
+            } else {
+                res.type(attachments[0].mimetype);
+                res.sendfile('uploads/' + req.params.id);
             }
-        );
-    });
+        }
+    );
 });
 
 app.use(express.static(__dirname + '/..'));

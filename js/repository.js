@@ -6,9 +6,17 @@ angular.module('repository', []).
         return {
             listReports: function (target, onReady) {
                 var oReq = new XMLHttpRequest();
-                oReq.onload = function () {
-                    if (onReady != undefined) {
-                        onReady(eval(this.responseText));
+                oReq.onreadystatechange = function (oEvent) {
+                    console.log("statechange", oReq.readyState);
+                    if (oReq.readyState === 4) {
+                        if (oReq.status === 200) {
+                            if (onReady != undefined) {
+                                onReady(eval(oReq.responseText));
+                            }
+                        } else {
+                            console.log("Error", oReq.status, oReq.statusText, "reason:", oReq.responseText);
+
+                        }
                     }
                 };
                 oReq.open("get", "ws/targets/" + target + "/reports", true);
