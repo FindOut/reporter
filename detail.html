@@ -1,17 +1,19 @@
 <form name="myForm">
     <div id="aForm">
-        <div class="toprow">
+        <div class="toprow gray-bottom-divider">
             <a class="left-button" href="#/"><img src="img/x.png"/></a>
             <h2 class="centered-title">{{target}}</h2>
             <a class="right-button" ng-click="destroy()"><img src="img/delete.png"/></a>
             <a class="right-button" ng-click="save()"><img src="img/done-check.png"/></a>
         </div>
-        <div class="control-group" ng-class="{error: myForm.type.$invalid}">
+        <div class="toprow" ng-class="{error: myForm.type.$invalid}">
             <select name="type" ng-model="report.type" onchange="$('#description').focus()" required>
                 <option value="problem">Felanmälan</option>
                 <option value="suggestion">Förslag</option>
                 <option value="success">Framgångssaga</option>
             </select>
+            <div class="centered-title"></div>
+            <div>{{formattedDate}}</div>
         </div>
 
         <textarea id="description" name="description" ng-model="report.description"

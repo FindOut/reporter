@@ -39,6 +39,7 @@ function ListCtrl($scope, repo, context, $location) {
 function CreateCtrl($scope, $location, $timeout, context, repo) {
     $('#aForm').height(window.innerHeight + 'px');
     addAttachmentHandler($scope, repo);
+    $scope.formattedDate = "";
     $scope.save = function () {
         $scope.report.target = context.target;
         $scope.report.createdDate = new Date().toISOString();
@@ -55,6 +56,7 @@ function EditCtrl($scope, $location, $routeParams, repo) {
     $('#aForm').height(window.innerHeight + 'px');
     repo.getReport($routeParams.reportId, function (report) {
         $scope.report = angular.copy(report);
+        $scope.formattedDate = new Date(report.changedDate).format("d mmm yyyy HH:MM");
         $scope.isClean = function () {
             return angular.equals(report, $scope.report);
         };
@@ -79,18 +81,6 @@ function EditCtrl($scope, $location, $routeParams, repo) {
         }
         $scope.$apply();
     });
-}
-
-function resizeTextArea() {
-    //Wrap your form contents in a div and get its offset height
-    var heightOfForm = document.getElementById('formWrapper').offsetHeight;
-    //Get height of body (accounting for user-installed toolbars)
-    var heightOfBody = document.body.clientHeight;
-    var buffer = 35; //Accounts for misc. padding, etc.
-    //Set the height of the textarea dynamically
-    document.getElementById('aForm').style.height =
-        (heightOfBody - heightOfForm) - buffer;
-    //NOTE: For extra panache, add onresize="resizeTextArea()" to the body
 }
 
 function ViewImageCtrl($scope, $location, $routeParams, repo) {
@@ -140,10 +130,12 @@ function dateFormatter(isoString) {
     } else if (diff < hourMillis) {
         return Math.round(diff / minMillis) + " min";
     } else if (diff < dayMillis) {
-        return Math.round(diff / hourMillis) + " hours";
+        return Math.round(diff / hourMillis) + " tim";
     } else if (diff < 2.6 * dayMillis) {
-        return Math.round(diff / dayMillis) + " days";
-    } else {
+        return Math.round(diff / dayMillis) + " dagar";
+    } else if (now.getYear() == date.getYear()) {
         return date.format("d mmm");
+    } else {
+        return date.format("d mmm yyyy");
     }
 }
