@@ -52,11 +52,19 @@ function CreateCtrl($scope, $location, $timeout, context, repo) {
     }
 }
 
+function fullDateIfNeeded(date) {
+    if (new Date().getYear() == date.getYear()) {
+        return date.format("d mmm HH:MM")
+    } else {
+        return date.format("d mmm yyyy HH:MM")
+    }
+}
+
 function EditCtrl($scope, $location, $routeParams, repo) {
     $('#aForm').height(window.innerHeight + 'px');
     repo.getReport($routeParams.reportId, function (report) {
         $scope.report = angular.copy(report);
-        $scope.formattedDate = new Date(report.changedDate).format("d mmm yyyy HH:MM");
+        $scope.formattedDate = fullDateIfNeeded(new Date(report.changedDate));
         $scope.isClean = function () {
             return angular.equals(report, $scope.report);
         };

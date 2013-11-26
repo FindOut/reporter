@@ -6,7 +6,7 @@
             <a class="right-button" ng-click="destroy()"><img src="img/delete.png"/></a>
             <a class="right-button" ng-click="save()"><img src="img/done-check.png"/></a>
         </div>
-        <div class="toprow" ng-class="{error: myForm.type.$invalid}">
+        <div class="toprow smallertext" ng-class="{error: myForm.type.$invalid}">
             <select name="type" ng-model="report.type" onchange="$('#description').focus()" required>
                 <option value="problem">Felanmälan</option>
                 <option value="suggestion">Förslag</option>
