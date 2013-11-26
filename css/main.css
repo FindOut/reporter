@@ -65,6 +65,10 @@ img {
     visibility:hidden;
 }
 
+.hidden {
+    display: none;
+}
+
 .target-title {
     font-size: 140%;
     font-weight: 600;
@@ -173,6 +177,20 @@ ul.report-list li.selected-true {
 
 .report-list-description {
 
+}
+
+.attachmentrow {
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+}
+
+.attachmentitem {
+    -webkit-flex: 1;
+    flex: 1;
 }
 
 ul.attachmentlist {

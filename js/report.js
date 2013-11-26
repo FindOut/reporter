@@ -40,6 +40,7 @@ function CreateCtrl($scope, $location, $timeout, context, repo) {
     $('#aForm').height(window.innerHeight + 'px');
     addAttachmentHandler($scope, repo);
     $scope.formattedDate = "";
+    $scope.imageByMime = imageByMime;
     $scope.save = function () {
         $scope.report.target = context.target;
         $scope.report.createdDate = new Date().toISOString();
@@ -60,6 +61,14 @@ function fullDateIfNeeded(date) {
     }
 }
 
+function imageByMime(mime) {
+    if (/image\/.*/.test(mime)) {
+        return "camera.png";
+    } else {
+        return "microphone.png";
+    }
+}
+
 function EditCtrl($scope, $location, $routeParams, repo) {
     $('#aForm').height(window.innerHeight + 'px');
     repo.getReport($routeParams.reportId, function (report) {
@@ -68,13 +77,7 @@ function EditCtrl($scope, $location, $routeParams, repo) {
         $scope.isClean = function () {
             return angular.equals(report, $scope.report);
         };
-        $scope.imageByMime = function(mime) {
-            if (/image\/.*/.test(mime)) {
-                return "camera.png";
-            } else {
-                return "microphone.png";
-            }
-        };
+        $scope.imageByMime = imageByMime;
         $scope.destroy = function () {
             repo.deleteReport($scope.report.id);
             $location.path('/');
@@ -107,7 +110,9 @@ function addAttachmentHandler($scope, repo) {
             if ($scope.report.attachments == undefined) {
                 $scope.report.attachments = [];
             }
-            $scope.report.attachments.push({id: attachment_id, mimetype: f.type});
+            var newItem = {id: attachment_id, mimetype: f.type};
+            console.log("newItem=", newItem);
+            $scope.report.attachments.push(newItem);
             $('#bardiv').hide();
             $scope.$apply();
         }, function(percent) {
