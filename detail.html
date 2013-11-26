@@ -20,7 +20,7 @@
                   ng-disabled="myForm.type.$invalid" placeholder="Beskrivning"></textarea>
 
         <div class="attachmentrow">
-            <div ng-repeat="attachment in report.attachments" ng-click="viewImage(attachment.id)">
+            <div ng-repeat="attachment in report.attachments" ng-click="viewMedia(attachment.id, attachment.mimetype)">
                 <img ng-src="img/{{imageByMime(attachment.mimetype)}}">
             </div>
             <div class="attachmentitem"></div>

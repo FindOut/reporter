@@ -1,4 +1,4 @@
-angular.module('report', ['repository']).
+angular.module('report', ['repository', 'ngRoute']).
     service('context',function ($location) {
         return function () {
         };
@@ -8,6 +8,7 @@ angular.module('report', ['repository']).
             when('/', {controller: ListCtrl, templateUrl: 'list.html'}).
             when('/edit/:reportId', {controller: EditCtrl, templateUrl: 'detail.html'}).
             when('/image/:attachmentId', {controller: ViewImageCtrl, templateUrl: 'image.html'}).
+            when('/audio/:attachmentId/mime/:mime*/play', {controller: PlayAudioCtrl, templateUrl: 'audio.html'}).
             when('/new', {controller: CreateCtrl, templateUrl: 'detail.html'}).
             otherwise({redirectTo: '/'});
     });
@@ -87,8 +88,14 @@ function EditCtrl($scope, $location, $routeParams, repo) {
             $location.path('/');
         };
         addAttachmentHandler($scope, repo);
-        $scope.viewImage = function (id) {
-            window.location.href = "#/image/" + id;
+        $scope.viewMedia = function (id, mime) {
+            if (mime.match(new RegExp("^image/"))) {
+                window.location.href = "#/image/" + id;
+                console.log("image id=",id,"url=",window.location.href);
+            } else {
+                window.location.href = "#/audio/" + id + "/mime/audio/mp3/play";
+                console.log("audio id=",id,"mime=",mime,"url=",window.location.href);
+            }
         }
         $scope.$apply();
     });
@@ -96,6 +103,11 @@ function EditCtrl($scope, $location, $routeParams, repo) {
 
 function ViewImageCtrl($scope, $location, $routeParams, repo) {
     $scope.imageurl = repo.getFileUrl($routeParams.attachmentId);
+}
+
+function PlayAudioCtrl($scope, $location, $routeParams, repo) {
+    $scope.url = repo.getFileUrl($routeParams.attachmentId);
+    $scope.mime = $routeParams.mime;
 }
 
 function addAttachmentHandler($scope, repo) {
