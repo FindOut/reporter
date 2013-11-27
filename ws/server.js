@@ -2,6 +2,12 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 
+app.use(function(req, res, next){
+    console.log('%s %s', req.method, req.url);
+    req.
+    next();
+});
+
 var mysql = require('mysql');
 var mysqlPool = mysql.createPool({
     host: 'localhost',
@@ -123,30 +129,40 @@ app.del('/ws/reports/:id', function (req, res) {
             console.log("deleted report with id=" + report_id);
             mysqlPool.query('select id from attachment where report=?', [report_id],
                 function (err, attachments) {
-                    mysqlPool.query('delete from attachment where report=?', [report_id],
-                        function (err, reports) {
-                            if (err) {
-                                console.log("attachments could not be deleted for deleted report id " + report_id);
-                            } else {
-                                console.log("deleted attachments with report=" + report_id);
-                            }
-                        }
-                    );
                     for (var i in attachments) {
-                        var file_to_delete = 'uploads/' + attachments[i].id;
-                        fs.unlink(file_to_delete, function (err) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                console.log("deleted attachment file " + file_to_delete);
-                            }
-                        });
+                        deleteAttachment(res, attachments[i].id);
                     }
                 }
             );
         }
     );
 });
+
+// delete attachment with file, by id
+app.del('/ws/attachments/:id', function (req, res) {
+    deleteAttachment(res, req.params.id);
+});
+
+function deleteAttachment(res, attachmentId) {
+    mysqlPool.query('delete from attachment where id=?', [attachmentId],
+        function (err, result) {
+            test_err(err, res);
+            deleteAttachmentFile(attachmentId);
+            res.send("OK");
+        }
+    );
+}
+
+function deleteAttachmentFile(id) {
+    var file_to_delete = 'uploads/' + id;
+    fs.unlink(file_to_delete, function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("deleted attachment file " + file_to_delete);
+        }
+    });
+}
 
 // upload attachment return new attachment id
 app.post('/ws/attachments', function (req, res) {

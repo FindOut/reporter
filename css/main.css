@@ -69,6 +69,12 @@ img {
     display: none;
 }
 
+audio {
+    width: 95%;
+    margin: 2em auto 0 auto;
+    display: block;
+}
+
 .target-title {
     font-size: 140%;
     font-weight: 600;

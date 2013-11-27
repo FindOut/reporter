@@ -69,6 +69,17 @@ angular.module('repository', []).
                 oReq.send();
             },
 
+            deleteAttachment: function (id, onReady) {
+                var oReq = new XMLHttpRequest();
+                oReq.onload = function () {
+                    if (onReady != undefined) {
+                        onReady();
+                    }
+                };
+                oReq.open("delete", "ws/attachments/" + id, true);
+                oReq.send();
+            },
+
             // uploads file f and when done, calls onReady with the created id for it
             uploadFile: function (file, onReady, showProgress) {
                 var xhr = new XMLHttpRequest();

@@ -101,13 +101,27 @@ function EditCtrl($scope, $location, $routeParams, repo) {
     });
 }
 
-function ViewImageCtrl($scope, $location, $routeParams, repo) {
+function ViewImageCtrl($scope, $timeout, $routeParams, repo) {
     $scope.imageurl = repo.getFileUrl($routeParams.attachmentId);
+    $scope.destroy = function() {
+        repo.deleteAttachment($routeParams.attachmentId, function() {
+            $timeout(function () {
+                window.history.back();
+            });
+        });
+    };
 }
 
-function PlayAudioCtrl($scope, $location, $routeParams, repo) {
+function PlayAudioCtrl($scope, $timeout, $routeParams, repo) {
     $scope.url = repo.getFileUrl($routeParams.attachmentId);
     $scope.mime = $routeParams.mime;
+    $scope.destroy = function() {
+        repo.deleteAttachment($routeParams.attachmentId, function() {
+            $timeout(function () {
+                window.history.back();
+            });
+        });
+    };
 }
 
 function addAttachmentHandler($scope, repo) {
