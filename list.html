@@ -12,7 +12,10 @@
 <ul class="report-list">
     <li ng-repeat="report in reports | filter:context.target:strict | filter:search | orderBy:'-createdDate'"
         class="selected-{{selectedReport(report.id)}}" ng-click="viewReport(report.id)">
-        <div><span class="report-list-date">{{formatDate(report.changedDate)}}</span></div>
+        <div><span class="report-list-date">{{formatDate(report.changedDate)}}</span><span class="flex-fill"></span>
+            <img class="hidden-{{!report.hasImage}}" src="img/camera.png"/>
+            <img class="hidden-{{!report.hasAudio}}" src="img/microphone.png"/>
+        </div>
         <div><span class="report-list-description">{{report.description}}</span></div>
     </li>
 </ul>

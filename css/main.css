@@ -2,6 +2,10 @@
     font-size: 80%;
 }
 
+.smallerimg {
+    max-width: 50%;
+}
+
 #aForm {
     padding: 0;
     margin: 0;
@@ -161,20 +165,41 @@ body {
 ul.report-list {
     list-style-type: none;
     background-color: #fff;
-    padding: 0 0.3em 0 0.3em;
+    padding: 0;
     margin: 0;
 }
 
 ul.report-list li {
-    margin: 0 0 0.3em 0;
-    padding: 0.3em 0em 0.3em 0em;
+    padding: 0.3em 0.3em 0.3em 0.3em;
     margin: 0;
     border: 0;
-    border-bottom:0.1em solid #f0f0f0;
+    border-bottom: 0.1em solid #f0f0f0;
+}
+
+ul.report-list li div {
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
+    display: flex;
+    flex-direction: row;
+}
+
+ul.report-list li img {
+    max-width: 1.2em;
+    max-height: 0.7em;
+    margin: 0 0 0 0.2em;
+}
+
+.hidden-true {
+    visibility:hidden;
+}
+
+.flex-fill {
+    -webkit-flex: 1;
+    flex: 1;
 }
 
 ul.report-list li.selected-true {
-    background-color: #fff;
+    background-color: #eee;
 }
 
 .report-list-date {

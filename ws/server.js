@@ -31,8 +31,10 @@ function test_err(err, res) {
 // list reports by target
 app.get('/ws/targets/:target/reports', function (req, res) {
     console.log("get /ws/targets/" + req.params.target + "/reports");
-    mysqlPool.query('select id, target, type, description, createdDate, changedDate ' +
-        'from report where target=? order by changedDate desc', [req.params.target],
+    mysqlPool.query('select id, target, type, description, createdDate, changedDate, ' +
+        "exists(select * from attachment where report=r.id and mimetype like 'image/%') as hasImage, " +
+        "exists(select * from attachment where report=r.id and mimetype not like 'image/%') as hasAudio " +
+        'from report r where target=? order by changedDate desc', [req.params.target],
         function (err, result) {
             test_err(err, res);
             res.send(result);
