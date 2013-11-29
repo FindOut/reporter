@@ -184,13 +184,13 @@ ul.report-list li div {
 }
 
 ul.report-list li img {
-    max-width: 1.5em;
-    max-height: 1.5em;
+    max-width: 1.3em;
+    max-height: 1.3em;
     margin: 0 0 0 0.2em;
 }
 
 .hidden-true {
-    visibility:hidden;
+    display: none;
 }
 
 .flex-fill {
@@ -215,25 +215,17 @@ ul.report-list li.selected-true {
     -webkit-flex-direction: row;
     display: flex;
     flex-direction: row;
-    width: 100%;
     align-items: center;
+    padding: 0 0.5em 0 0.5em;
 }
 
-.attachmentitem {
+.attachmentitemfiller {
     -webkit-flex: 1;
     flex: 1;
 }
 
-ul.attachmentlist {
-    padding: 0 0 0 0;
-    margin: 0;
-}
-
-ul.attachmentlist li {
-    float: left;
-    list-style-type: none;
-    padding: 0 5px 0 0;
-    margin: 0;
+.attachmentitem {
+    margin: 0 0.25em 0 0.25em;
 }
 
 .image-upload > input {

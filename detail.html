@@ -20,12 +20,12 @@
                   ng-disabled="myForm.type.$invalid" placeholder="Beskrivning"></textarea>
 
         <div class="attachmentrow">
-            <div ng-repeat="attachment in report.attachments" ng-click="viewMedia(attachment.id, attachment.mimetype)">
+            <div class="attachmentitem" ng-repeat="attachment in report.attachments" ng-click="viewMedia(attachment.id, attachment.mimetype)">
                 <img ng-src="img/{{imageByMime(attachment.mimetype)}}">
             </div>
-            <div class="attachmentitem"></div>
-            <div><label for="image-upload"><img src="img/camera-plus.png"/></label></div>
-            <div><label for="audio-upload"><img src="img/microphone-plus.png"/></label></div>
+            <div class="attachmentitemfiller"></div>
+            <div class="attachmentitem"><label for="image-upload"><img src="img/camera-plus.png"/></label></div>
+            <div class="attachmentitem"><label for="audio-upload"><img src="img/microphone-plus.png"/></label></div>
         </div>
         <input class="hidden" id="image-upload" type="file" accept="image/*" capture="camera">
         <input class="hidden" id="audio-upload" type="file" accept="audio/*" capture="microphone">
