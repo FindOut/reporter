@@ -19,6 +19,10 @@
     margin: 0 0 0.5em 0;
 }
 
+.leftrightpad {
+    padding: 0 .5em 0 .5em;
+}
+
 #description {
     -webkit-flex: 1;
     flex: 1;
@@ -36,7 +40,6 @@ img {
     -webkit-flex-direction: row;
     display: flex;
     flex-direction: row;
-    width: 100%;
     align-items: center;
 }
 
