@@ -2,24 +2,39 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 
+var port, mysqlPool;
+
 app.use(function(req, res, next){
     console.log('%s %s', req.method, req.url);
-    req.
     next();
 });
 
 var mysql = require('mysql');
-var mysqlPool = mysql.createPool({
-    host: 'localhost',
-    user: 'reporter',
-    password: '',
-    database: 'reporter'
+
+// start with NODE_ENV=development
+app.configure("development", function () {
+    mysqlPool = mysql.createPool({
+        host: 'localhost',
+        user: 'reporter',
+        password: '',
+        database: 'reporterdev'
+    });
+    port = 3010;
 });
 
-app.configure(function () {
-    app.use(express.bodyParser());
-    app.use(app.router);
+// start with NODE_ENV=production
+app.configure("production", function () {
+    mysqlPool = mysql.createPool({
+        host: 'localhost',
+        user: 'reporter',
+        password: '',
+        database: 'reporter'
+    });
+    port = 3000;
 });
+
+app.use(express.bodyParser());
+app.use(app.router);
 
 function test_err(err, res) {
     if (err) {
@@ -30,7 +45,6 @@ function test_err(err, res) {
 
 // list reports by target
 app.get('/ws/targets/:target/reports', function (req, res) {
-    console.log("get /ws/targets/" + req.params.target + "/reports");
     mysqlPool.query('select id, target, type, description, createdDate, changedDate, ' +
         "exists(select * from attachment where report=r.id and mimetype like 'image/%') as hasImage, " +
         "exists(select * from attachment where report=r.id and mimetype not like 'image/%') as hasAudio " +
@@ -197,7 +211,7 @@ app.get('/ws/attachments/:id/raw', function (req, res) {
     );
 });
 
-app.use(express.static(__dirname + '/..'));
+app.use(express.static(__dirname));
 
-app.listen(3000);
-console.log('Listening on port 3000...');
+app.listen(port);
+console.log('Listening on port ' + port + '...');

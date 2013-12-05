@@ -65,8 +65,8 @@ Uppladdade bilagor lagras i filer med namn lika med id för motsvarande attachme
         target varchar(255),
         type varchar(100), 
         description varchar(255) NOT NULL,
-        createdDate date not null, 
-        changedDate date not null,
+        createdDate timestamp not null, 
+        changedDate timestamp not null,
         PRIMARY KEY (id),UNIQUE id (id));
     
 ### REST-tjänst
@@ -83,3 +83,22 @@ De med id returnerar status 404 om id saknas.
 * GET /ws/attachments/:id/raw - returnerar  mime-typad binärdata för attachment med id
 * DELETE /ws/attachments/:id
 
+### kör servern
+
+Checka ut koden i en mapp
+
+#### Produktionsläge
+
+Starta med:
+
+    NODE_ENV=production nohup repeat server.js &
+    
+Vilket lyssnar på port 3000 och använder databasen reporter.
+
+#### Utvecklingsläge
+
+Starta med:
+
+    NODE_ENV=development nohup nodemon server.js &
+
+Som lyssnar på 3010 och använder databasen reporterdev, samt startar om servern så fort server.js ändrats.

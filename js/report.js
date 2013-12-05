@@ -137,7 +137,7 @@ function addAttachmentHandler($scope, repo) {
                 $scope.report.attachments = [];
             }
             var newItem = {id: attachment_id, mimetype: f.type};
-            console.log("newItem=", newItem);
+            console.log("newItem= ", newItem);
             $scope.report.attachments.push(newItem);
             $('#bardiv').hide();
             $scope.$apply();
