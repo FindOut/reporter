@@ -1,83 +1,85 @@
 /**
- responsible for reading, storing and listing reports.
+ responsible for reading, storing and listing reports accessible through a REST service.
  */
 angular.module('repository', []).
     service('repo', function ($location) {
         return {
             listReports: function (target, onReady) {
-                var oReq = new XMLHttpRequest();
-                oReq.onreadystatechange = function (oEvent) {
-                    console.log("statechange", oReq.readyState);
-                    if (oReq.readyState === 4) {
-                        if (oReq.status === 200) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function (oEvent) {
+                    console.log("statechange", xhr.readyState);
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
                             if (onReady != undefined) {
-                                onReady(eval(oReq.responseText));
+                                var response_obj = eval(xhr.responseText);
+                                onReady(response_obj);
+                                console.log("got list response", response_obj);
                             }
                         } else {
-                            console.log("Error", oReq.status, oReq.statusText, "reason:", oReq.responseText);
+                            console.log("Error", xhr.status, xhr.statusText, "reason:", xhr.responseText);
 
                         }
                     }
                 };
-                oReq.open("get", "ws/targets/" + target + "/reports", true);
-                oReq.send();
+                xhr.open("get", "ws/targets/" + target + "/reports", true);
+                xhr.send();
             },
 
             getReport: function (id, onReady) {
-                var oReq = new XMLHttpRequest();
-                oReq.onload = function () {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
                     if (onReady != undefined) {
                         onReady(eval(this.responseText)[0]);
                     }
                 };
-                oReq.open("get", "ws/reports/" + id, true);
-                oReq.send();
+                xhr.open("get", "ws/reports/" + id, true);
+                xhr.send();
             },
 
             addReport: function (report, onReady) {
-                var oReq = new XMLHttpRequest();
-                oReq.onload = function () {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
                     if (onReady != undefined) {
                         onReady(this.responseText);
                     }
                 };
-                oReq.open("post", "ws/reports", true);
-                oReq.setRequestHeader('Content-Type', 'application/json');
-                oReq.send(JSON.stringify(report));
+                xhr.open("post", "ws/reports", true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify(report));
             },
 
             saveReport: function (report, onReady) {
-                var oReq = new XMLHttpRequest();
-                oReq.onload = function () {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
                     if (onReady != undefined) {
                         onReady(this.responseText);
                     }
                 };
-                oReq.open("put", "ws/reports/" + report.id, true);
-                oReq.setRequestHeader('Content-Type', 'application/json');
-                oReq.send(JSON.stringify(report));
+                xhr.open("put", "ws/reports/" + report.id, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify(report));
             },
 
             deleteReport: function (id, onReady) {
-                var oReq = new XMLHttpRequest();
-                oReq.onload = function () {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
                     if (onReady != undefined) {
                         onReady(eval('[' + this.responseText + ']')[0]);
                     }
                 };
-                oReq.open("delete", "ws/reports/" + id, true);
-                oReq.send();
+                xhr.open("delete", "ws/reports/" + id, true);
+                xhr.send();
             },
 
             deleteAttachment: function (id, onReady) {
-                var oReq = new XMLHttpRequest();
-                oReq.onload = function () {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function () {
                     if (onReady != undefined) {
                         onReady();
                     }
                 };
-                oReq.open("delete", "ws/attachments/" + id, true);
-                oReq.send();
+                xhr.open("delete", "ws/attachments/" + id, true);
+                xhr.send();
             },
 
             // uploads file f and when done, calls onReady with the created id for it

@@ -24,6 +24,7 @@ function ListCtrl($scope, repo, context, $location) {
     $scope.formatDate = dateFormatter;
     $scope.context = context;
     repo.listReports(context.target, function (list) {
+        console.log("ListCtrl got list", list);
         $scope.reports = list;
         $scope.loading = false;
         $scope.$apply();
