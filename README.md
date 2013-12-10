@@ -91,7 +91,7 @@ Checka ut koden i en mapp
 
 Starta med:
 
-    NODE_ENV=production nohup repeat server.js &
+    NODE_ENV=production nohup repeat server-mysql.js &
     
 Vilket lyssnar på port 3000 och använder databasen reporter.
 
@@ -99,6 +99,6 @@ Vilket lyssnar på port 3000 och använder databasen reporter.
 
 Starta med:
 
-    NODE_ENV=development nohup nodemon server.js &
+    NODE_ENV=development nohup nodemon server-mysql.js &
 
-Som lyssnar på 3010 och använder databasen reporterdev, samt startar om servern så fort server.js ändrats.
+Som lyssnar på 3010 och använder databasen reporterdev, samt startar om servern så fort server-mysql.js ändrats.
