@@ -1,6 +1,7 @@
 var express = require('express');
 var fs = require('fs');
-var http = require('http');
+var path = require('path');
+var temp = require('temp');
 var request = require('request');
 var parseUrl = require('url').parse;
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
@@ -19,28 +20,13 @@ app.use(function(req, res, next){
     next();
 });
 
-var mysql = require('mysql');
-var mysqlPool;
-
 // start with NODE_ENV=development
 app.configure("development", function () {
-    mysqlPool = mysql.createPool({
-        host: 'localhost',
-        user: 'reporter',
-        password: '',
-        database: 'reporterdev'
-    });
     port = 3010;
 });
 
 // start with NODE_ENV=production
 app.configure("production", function () {
-    mysqlPool = mysql.createPool({
-        host: 'localhost',
-        user: 'reporter',
-        password: '',
-        database: 'reporter'
-    });
     port = 3000;
 });
 
@@ -174,8 +160,8 @@ function upload_attachments_to_jira(report) {
     for (i in report.attachments) {
         var attachment = report.attachments[i];
         if (attachment.inJira == undefined) {
-            console.log("upload_attachments_to_jira report.id=", report.id)
-            var file = '/home/dag/reporterdev/uploads/' + attachment.id;
+            var file = 'uploads/' + attachment.id;
+            console.log("upload_attachments_to_jira report id=", report.id + " file=" + file)
             var form = new FormData();
             form.append('file', fs.createReadStream(file),
                 {filename: 'file.' + attachment.mimetype.split('/')[1], contentType: attachment.mimetype});
@@ -187,6 +173,12 @@ function upload_attachments_to_jira(report) {
                 console.log('Done ', res.statusCode);
                 if (res.statusCode == 200) {
                     attachment.inJira = true;
+                    fs.unlink(file, function(err) {
+                        if (err) {
+                            console.log("error: could not delete file '" + file + "'");
+                        }
+                    });
+
                 }
             });
         }
@@ -202,16 +194,12 @@ function test_err(err, res) {
 
 // upload attachment return new attachment id
 app.post('/ws/attachments', function (req, res) {
-//    console.log("post /ws/attachments ", req.files);
     var file = req.files.afile;
-    mysqlPool.query('insert into attachment (name, mimetype) values (?, ?)', [file.name, file.type], function (err, attachment) {
+    var tmpPath = temp.path({dir: 'uploads'});
+    var attachment_id = path.basename(tmpPath);
+    fs.rename(file.path, tmpPath, function (err) {
         test_err(err, res);
-        var attachment_id = attachment.insertId;
-        fs.rename(file.path, 'uploads/' + attachment_id, function (err) {
-            test_err(err, res);
-            res.send("" + attachment_id);
-
-        });
+        res.send("" + attachment_id);
     });
 });
 

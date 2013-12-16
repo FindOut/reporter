@@ -9,6 +9,8 @@
         "connect": "2.x",
         "xmlhttprequest": "1.x",
         "request": "2.x",
-        "form-data": "0.1.2"
+        "form-data": "0.1.2",
+        "temp": "0.6.x",
+        "path": "0.4.x"
     }
 }
