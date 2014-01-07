@@ -11,7 +11,7 @@ angular.module('repository', []).
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
                             if (onReady != undefined) {
-                                var response_obj = eval(xhr.responseText);
+                                var response_obj = JSON.parse(xhr.responseText);
                                 onReady(response_obj);
                                 console.log("got list response", response_obj);
                             }
@@ -29,7 +29,7 @@ angular.module('repository', []).
                 var xhr = new XMLHttpRequest();
                 xhr.onload = function () {
                     if (onReady != undefined) {
-                        onReady(eval(this.responseText)[0]);
+                        onReady(JSON.parse(this.responseText));
                     }
                 };
                 xhr.open("get", "ws/reports/" + id, true);
@@ -64,7 +64,7 @@ angular.module('repository', []).
                 var xhr = new XMLHttpRequest();
                 xhr.onload = function () {
                     if (onReady != undefined) {
-                        onReady(eval('[' + this.responseText + ']')[0]);
+                        onReady(JSON.parse(this.responseText));
                     }
                 };
                 xhr.open("delete", "ws/reports/" + id, true);

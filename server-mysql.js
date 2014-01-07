@@ -72,7 +72,7 @@ app.get('/ws/reports/:id', function (req, res) {
                     function (err, attachments) {
                         test_err(err, res);
                         reports[0].attachments = attachments;
-                        res.send(reports);
+                        res.send(reports[0]);
                     }
                 );
             }

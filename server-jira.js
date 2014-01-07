@@ -65,7 +65,7 @@ app.get('/ws/targets/:target/reports', function (req, res) {
     xhr.onreadystatechange = function (oEvent) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                res.send(from_jira_search_result_to_reports(target, eval('[' + xhr.responseText + ']')[0]));
+                res.send(from_jira_search_result_to_reports(target, JSON.parse(xhr.responseText)));
             } else {
                 console.log("Error", xhr.status, xhr.statusText, "reason:", xhr.responseText);
                 res.send(xhr.status, xhr.statusText);
@@ -84,7 +84,7 @@ app.get('/ws/reports/:id', function (req, res) {
     xhr.onreadystatechange = function (oEvent) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                res.send([from_jira_issue_to_report("", eval('[' + xhr.responseText + ']')[0])]);
+                res.send(from_jira_issue_to_report("", JSON.parse(xhr.responseText)));
             } else {
                 console.log("Error", xhr.status, xhr.statusText, "reason:", xhr.responseText);
                 res.send(xhr.status, xhr.statusText);
