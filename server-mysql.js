@@ -65,7 +65,7 @@ app.get('/ws/reports/:id', function (req, res) {
         function (err, reports) {
             test_err(err, res);
             if (reports.length == 0) {
-                send(404, 'report ' + req.params.id + ' not found');
+                res.send(404, 'report ' + req.params.id + ' not found');
             } else {
                 // query all attachments for this report and put in a report attribute
                 mysqlPool.query('select id, mimetype from attachment where report=?', [req.params.id],
@@ -112,7 +112,7 @@ app.put('/ws/reports/:id', function (req, res) {
         function (err, result) {
             test_err(err, res);
             if (result.length == 0) {
-                send(404, 'report ' + req.params.id + ' not found');
+                res.send(404, 'report ' + req.params.id + ' not found');
 
             } else {
                 if (req.body.attachments != undefined && req.body.attachments.length > 0) {
@@ -202,7 +202,7 @@ app.get('/ws/attachments/:id/raw', function (req, res) {
         function (err, attachments) {
             test_err(err, res);
             if (attachments.length == 0) {
-                send(404, 'attachment ' + req.params.id + ' not found');
+                res.send(404, 'attachment ' + req.params.id + ' not found');
             } else {
                 res.type(attachments[0].mimetype);
                 res.sendfile('uploads/' + req.params.id);
