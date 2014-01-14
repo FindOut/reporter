@@ -58,6 +58,7 @@ Uppladdade bilagor lagras i filer med namn lika med id för motsvarande attachme
         report int(7), 
         name varchar(255) NOT NULL, 
         mimetype varchar(100), 
+        createdDate timestamp not null,
         PRIMARY KEY (id), UNIQUE id (id));
     
     CREATE TABLE report (

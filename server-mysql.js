@@ -43,6 +43,70 @@ function test_err(err, res) {
     }
 }
 
+// clean up unused attachments
+app.get('/ws/cleanup', function (req, res) {
+    fs.readdir('uploads/', function(err, fileNames) {
+        test_err(err, res);
+        var list = [];
+        for (var i in fileNames) {
+            (function(fileName) {
+                fs.lstat('uploads/' + fileName, function(err, stats) {
+                    test_err(err, res);
+                    var unchangedHours = (Date.now() - stats.ctime.getTime()) / 3600000;
+                    if (stats.isFile() && unchangedHours > 24) {
+                        if (fileName.match(/^\s*\d+\s*$/)) {
+                            // only digits
+                            console.log(unchangedHours, fileName);
+                            var attachmentId = parseInt(fileName);
+                            mysqlPool.query("select id from attachment where id=?", [attachmentId], function(err, result) {
+                                test_err(err, res);
+                                if (result.length == 0) {
+                                    console.log("file " + fileName + " has no attachment row - delete file");
+                                    deleteAttachmentFile(attachmentId);
+                                } else {
+                                    console.log("file " + fileName + " has attachment row")
+                                    mysqlPool.query("select id from report where id=?", [result[0].report], function(err, result) {
+                                        test_err(err, res);
+                                        if (result.length == 0) {
+                                            console.log("attachment " + attachmentId + " has no report - delete attachment");
+                                            deleteAttachment(attachmentId);
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            console.log("file " + fileName + " has no attachment row - delete");
+                            deleteAttachmentFile(fileName);
+                        }
+                    }
+                });
+            })(fileNames[i]);
+
+        }
+    });
+
+    // delete attachment rows without file
+    mysqlPool.query("select id from attachment where createdDate < date_sub(sysdate(), interval 24 hour)", function(err, attachments) {
+        test_err(err, res);
+        for (i in attachments) {
+            (function(attachmentId) {
+                fs.exists('uploads/' + attachmentId, function(exists) {
+                    if (!exists) {
+                        console.log("attachment " + attachmentId + " has no file - delete it");
+                        mysqlPool.query('delete from attachment where id=?', [attachmentId],
+                            function (err, result) {
+                                test_err(err, res);
+                            }
+                        );
+                    }
+                })
+            })(attachments[i].id);
+        }
+    });
+
+    res.send();
+});
+
 // list reports by target
 app.get('/ws/targets/:target/reports', function (req, res) {
     mysqlPool.query('select id, target, type, description, createdDate, changedDate, ' +
@@ -99,7 +163,6 @@ app.post('/ws/reports', function (req, res) {
                 });
             } else {
                 res.send("" + report_id);
-
             }
         }
     );
@@ -113,7 +176,6 @@ app.put('/ws/reports/:id', function (req, res) {
             test_err(err, res);
             if (result.length == 0) {
                 res.send(404, 'report ' + req.params.id + ' not found');
-
             } else {
                 if (req.body.attachments != undefined && req.body.attachments.length > 0) {
                     mysqlPool.query('update attachment set report=? where id in (?)',
@@ -123,12 +185,10 @@ app.put('/ws/reports/:id', function (req, res) {
                         function (err, result2) {
                             test_err(err, res);
                             res.send("ok");
-
                         }
                     );
                 } else {
                     res.send('ok');
-
                 }
             }
         }
@@ -146,7 +206,7 @@ app.del('/ws/reports/:id', function (req, res) {
             mysqlPool.query('select id from attachment where report=?', [report_id],
                 function (err, attachments) {
                     for (var i in attachments) {
-                        deleteAttachment(res, attachments[i].id);
+                        deleteAttachment(attachments[i].id, res);
                     }
                 }
             );
@@ -156,21 +216,23 @@ app.del('/ws/reports/:id', function (req, res) {
 
 // delete attachment with file, by id
 app.del('/ws/attachments/:id', function (req, res) {
-    deleteAttachment(res, req.params.id);
+    deleteAttachment(req.params.id, res);
 });
 
-function deleteAttachment(res, attachmentId) {
+function deleteAttachment(attachmentId, res) {
     mysqlPool.query('delete from attachment where id=?', [attachmentId],
         function (err, result) {
             test_err(err, res);
             deleteAttachmentFile(attachmentId);
-            res.send("OK");
+            if (res) {
+                res.send("OK");
+            }
         }
     );
 }
 
-function deleteAttachmentFile(id) {
-    var file_to_delete = 'uploads/' + id;
+function deleteAttachmentFile(fileName) {
+    var file_to_delete = 'uploads/' + fileName;
     fs.unlink(file_to_delete, function (err) {
         if (err) {
             console.log(err);
@@ -184,7 +246,7 @@ function deleteAttachmentFile(id) {
 app.post('/ws/attachments', function (req, res) {
 //    console.log("post /ws/attachments ", req.files);
     var file = req.files.afile;
-    mysqlPool.query('insert into attachment (name, mimetype) values (?, ?)', [file.name, file.type], function (err, attachment) {
+    mysqlPool.query('insert into attachment (name, mimetype, createdDate) values (?, ?, ?)', [file.name, file.type, new Date()], function (err, attachment) {
         test_err(err, res);
         var attachment_id = attachment.insertId;
         fs.rename(file.path, 'uploads/' + attachment_id, function (err) {
